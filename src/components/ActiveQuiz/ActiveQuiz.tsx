@@ -1,8 +1,9 @@
 import React from 'react'
+import AnswerOption from './AnswerOption'
 import classes from './ActiveQuiz.module.scss'
 
 export default function ActiveQuiz(props) {
-   const { current, total, answers } = props
+   const { current, total, answers, status, onAnswerClick } = props
 
    return (
       <div className={classes.ActiveQuiz}>
@@ -17,11 +18,12 @@ export default function ActiveQuiz(props) {
 
          <ul className={classes.options}>
             {answers.map((answer, index) => (
-               <li
+               <AnswerOption
                   key={index}
-                  className={classes.item}
-                  onClick={() => props.onAnswerClick(answer.id)}
-               >{answer.text}</li>
+                  answer={answer}
+                  onAnswerClick={onAnswerClick}
+                  status={status ? status[answer.id] : null}
+               />
             ))}
          </ul>
       </div>
