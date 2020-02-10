@@ -1,0 +1,41 @@
+@import "utils/variables";
+@import "utils/mixins";
+@import "utils/fonts";
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+
+h1 {
+	font-size: rem(20);
+	color: $primary-color;
+	text-align: center;
+}
+
+html {
+	font-family: $main-font;
+	line-height: $main-line-height;
+	font-size: $main-font-size;
+	color: $main-font-color;
+	height: 100;
+	@media screen and (max-width: $desktop-width) {
+		font-size: 16px;
+	}
+	@media screen and (max-width: $tablet-width) {
+		font-size: 15px;
+	}
+	@media screen and (max-width: $phone-width) {
+		font-size: 14px;
+	}
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Caviar Dreams", "Segoe UI", "Roboto", "Oxygen",
+	  "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+	  sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+  
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}

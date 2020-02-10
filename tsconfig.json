@@ -1,0 +1,29 @@
+{
+   "compilerOptions": {
+      "allowJs": true,
+      "allowSyntheticDefaultImports": true,
+      "allowUmdGlobalAccess": true,
+      "alwaysStrict": true,
+      "charset": "utf8",
+      "checkJs": true,
+      "disableSizeLimit": true,
+      "experimentalDecorators": true,
+      "inlineSourceMap": true,
+      "module": "ESNext",
+      "moduleResolution": "node",
+      "noImplicitAny": true,
+      "noUnusedParameters": true,
+      "outDir": "./dist/",
+      "pretty": true,
+      "removeComments": true,
+      "resolveJsonModule": true,
+      "skipLibCheck": true,
+      "target": "es5",
+      "useDefineForClassFields": true,
+      "jsx": "preserve",
+   },
+   "exclude": [
+      "node_modules",
+      "**/*.spec.ts"
+   ]
+ }
