@@ -19,7 +19,7 @@
 		"array-bracket-spacing": ["error", "never"],
 		"arrow-spacing": ["error", { "before": true, "after": true }],
 		"block-spacing": "error",
-		"brace-style": "error",
+		"brace-style": "warn",
 		"comma-dangle": ["error", "never"],
 		"comma-spacing": ["error", { "before": false, "after": true }],
 		"comma-style": ["error", "last"],

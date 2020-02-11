@@ -1,3 +1,10 @@
+$text-color: #fff;
+$primary-color: #2884f6;
+$success-color: rgba(161, 240, 69, .7);
+$fail-color: rgba(240, 87, 108, .7);
+$answer-hover: rgba(255, 255, 255, .2);
+$grad-bg: linear-gradient(90deg, #5041b2 0%, #7969e6 100%);
+
 // Font
 $main-font: 'Caviar Dreams', Helvetica, Arial, sans-serif;
 $bold-font: 'Caviar Dreams Bold', Helvetica, Arial, sans-serif;
@@ -9,31 +16,3 @@ $main-font-color: #101010;
 $main-font-size: 18px;
 $main-font-weight: 400;
 $main-line-height: 1.4;
-
-// Responsive
-$desktop-width: 1280px;
-$sm-desktop-width: 980px;
-$tablet-width: 768px;
-$phone-width: 480px;
-$sm-phone-width: 320px;
-
-// Main color
-$default-color: #ffffff;
-$primary-color: #444ce0;
-$success-color: #26de81;
-$danger-color: #fc5c65;
-$warning-color: #fed330;
-$light-color: #999999;
-$purple-color: #8854d0;
-
-// Neutral Color
-$neutral-primary: #303133;
-$neutral-regular: #606266;
-$neutral-secondary: #909399;
-$neutral-placeholder: #C0C4CC;
-
-// Border Color
-$border-base: #DCDFE6;
-$border-light: #E4E7ED;
-$border-lighter: #EBEEF5;
-$border-lightex: #F2F6FC;
