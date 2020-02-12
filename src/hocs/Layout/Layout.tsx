@@ -3,14 +3,19 @@ import MenuToggle from '~cm/Navigation/MenuToggle'
 import Drawer from '~cm/Navigation/Drawer'
 import classes from './Layout.module.scss'
 
-export default function Layout(props) {
+const Layout: React.FC = ({ children }) => {
    const [menuOpen, setMenuOpen] = useState(false)
 
    const toggleMenu = () => setMenuOpen(!menuOpen)
 
+   const hideMenu = () => setMenuOpen(false)
+
    return (
       <div className={classes.Layout}>
-         <Drawer isOpen={menuOpen} />
+         <Drawer
+            isOpen={menuOpen}
+            hideMenu={hideMenu}
+         />
 
          <MenuToggle
             toggleMenu={toggleMenu}
@@ -18,8 +23,10 @@ export default function Layout(props) {
          />
 
          <main>
-            {props.children}
+            {children}
          </main>
       </div>
    )
 }
+
+export default Layout

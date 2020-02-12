@@ -26,7 +26,7 @@ const CompletedQuiz: React.FC<Props> = (props: InferProps<typeof CompletedQuiz.p
             ))}
          </ul>
 
-         <p>Your result is <b>{getSuccessRate()} %</b></p>
+         <p className={classes.result}>You scored <b>{getSuccessRate()}%</b></p>
          <button className={classes.button} onClick={restartQuiz}>Try again</button>
          {/* <Button onClick={restartQuiz} type="primary">Try again</Button>
          <Button type="success">Quiz list</Button> */}
