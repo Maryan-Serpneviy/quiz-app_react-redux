@@ -35,6 +35,34 @@ export default class Quiz extends Component {
       ]
    }
 
+   render() {
+      const { current, quiz, answerStatus, completed, results } = this.state
+
+      return (
+         <div className={classes.Quiz}>
+            <div className={classes.wrapper}>
+               <h1>Quiz</h1>
+
+               {!completed && <ActiveQuiz
+                  current={current + 1}
+                  total={quiz.length}
+                  question={quiz[current].question}
+                  answers={quiz[current].answers}
+                  onAnswerClick={this.onAnswerClick}
+                  status={answerStatus}
+               />}
+
+               {completed && (
+                  <CompletedQuiz
+                     quiz={quiz}
+                     results={results}
+                     restartQuiz={this.restartQuiz}
+               />)}
+            </div>
+         </div>
+      )
+   }
+
    onAnswerClick = (id: number) => {
       const { current, quiz, answerStatus, results } = this.state
 
@@ -88,33 +116,5 @@ export default class Quiz extends Component {
          completed: false,
          results: []
       })
-   }
-   
-   render() {
-      const { current, quiz, answerStatus, completed, results } = this.state
-
-      return (
-         <div className={classes.Quiz}>
-            <div className={classes.wrapper}>
-               <h1>Quiz</h1>
-
-               {!completed && <ActiveQuiz
-                  current={current + 1}
-                  total={quiz.length}
-                  question={quiz[current].question}
-                  answers={quiz[current].answers}
-                  onAnswerClick={this.onAnswerClick}
-                  status={answerStatus}
-               />}
-
-               {completed && (
-                  <CompletedQuiz
-                     quiz={quiz}
-                     results={results}
-                     restartQuiz={this.restartQuiz}
-               />)}
-            </div>
-         </div>
-      )
    }
 }

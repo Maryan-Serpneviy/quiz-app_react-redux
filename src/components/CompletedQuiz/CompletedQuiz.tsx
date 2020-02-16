@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes, { InferProps } from 'prop-types'
+import { Link } from 'react-router-dom'
 import Button from '~cm/Button'
 import classes from './CompletedQuiz.module.scss'
 
@@ -28,6 +29,9 @@ const CompletedQuiz: React.FC<Props> = (props: InferProps<typeof CompletedQuiz.p
 
          <p className={classes.result}>You scored <b>{getSuccessRate()}%</b></p>
          <button className={classes.button} onClick={restartQuiz}>Try again</button>
+         <Link to="/">
+            <button className={classes.button}>Quiz List</button>
+         </Link>
          {/* <Button onClick={restartQuiz} type="primary">Try again</Button>
          <Button type="success">Quiz list</Button> */}
       </div>
