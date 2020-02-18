@@ -101,7 +101,7 @@ export default class Quiz extends Component {
             })
          }
          window.clearTimeout(timeout)
-      }, 1500)
+      }, 1000)
    }
 
    isQuizCompleted(): boolean {
