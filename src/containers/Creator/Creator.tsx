@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Axios from 'axios'
 import Formic from '~/lib/formic'
 import Input from '~cm/Input'
 import Select from '~cm/Select'
@@ -90,7 +91,7 @@ export default class Creator extends Component {
       control.isValid = Formic.validate(control.value, control.validation)
 
       formControls[controlName] = control
-      
+
       this.setState({
          formControls,
          isFormValid: Formic.validateForm(formControls)
@@ -151,8 +152,19 @@ export default class Creator extends Component {
       })
    }
 
-   createQuiz = (event: React.MouseEvent<HTMLButtonElement>) => {
+   createQuiz = async (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault()
-      console.log(this.state.quiz)
+
+      try {
+         await Axios.post('https://quiz-app-react-85b48.firebaseio.com/quiz.json', this.state.quiz)
+         this.setState({
+            quiz: [],
+            isFormValid: false,
+            correctId: 1,
+            formControls: this.createFormControls()
+         })
+      } catch (err) {
+         console.error(err)
+      }
    }
 }
