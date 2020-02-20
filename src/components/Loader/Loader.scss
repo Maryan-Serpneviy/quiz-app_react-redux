@@ -1,4 +1,20 @@
-@import "../../assets/scss/utils/variables";
+$style: rgba(21, 114, 201, 0.7);
+$base: 25px; // 36
+$speed: 1.4s;
+
+// coefs: do not change
+$gap: $base * 1.222;
+$translate-step: $base * 1.111;
+
+@mixin apply-animation ($keyframes, $duration: $speed) {
+   -webkit-animation: $keyframes $duration infinite ease-in;
+   animation: $keyframes $duration infinite ease-in;
+}
+
+@mixin delay($delay) {
+   -webkit-animation-delay: $delay;
+   animation-delay: $delay
+}
 
 body, html {
    height: 100%;
@@ -13,97 +29,151 @@ body {
 
 .loader {
    height: 100%;
-   width: 100%
-}
+   width: 100%;
 
-.loader .l_main {
-   position: absolute;
-   top: 50%;
-   left: 50%;
-   width: 172px;
-   height: 128px;
-   margin: 0;
-   -webkit-transform: translate(-50%,-50%);
-   transform: translate(-50%,-50%)
-}
-
-@media (max-width:550px) {
-   .loader {
-      -webkit-transform: scale(0.75);
-      transform:scale(0.75)
+   & > div {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: $gap * 4;
+      height: $gap * 3;
+      margin: 0;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%)
    }
 }
 
-@media (max-width:440px) {
+@media (max-width: 550px) {
+   .loader {
+      -webkit-transform: scale(0.75);
+      transform: scale(0.75)
+   }
+}
+
+@media (max-width: 440px) {
    .loader {
       -webkit-transform: scale(0.5);
-      transform:scale(0.5)
+      transform: scale(0.5)
    }
 }
 
 .l_square {
    position: relative;
-   &:nth-child(1) {
-      margin-left: 0px
+   @for $i from 0 through 3 {
+      &:nth-child(#{$i + 1}) {
+         margin-left: $gap * $i;
+      }
+   }
+
+   &:nth-child(1) span {
+      @include apply-animation(animsquare1)
+   }
+   &:nth-child(2) span {
+      @include apply-animation(animsquare2)
+   }
+   &:nth-child(3) span {
+      @include apply-animation(animsquare3)
+   }
+   &:nth-child(4) span {
+      @include apply-animation(animsquare4)
+   }
+
+   span {
+      position: absolute;
+      top: 0px;
+      left: 20px;
+      height: $base;
+      width: $base;
+      border-radius: 2px;
+      background: $style;
+
+      @for $i from 0 through 2 {
+         &:nth-child(#{$i + 1}) {
+            top: $gap * $i;
+            @include delay(0.15s * $i)
+         }
+      }
    }
 }
 
-@for $i from 2 through 4 {
-   .l_square:nth-child(#{$i}) {
-      margin-left: 44px * ($i - 1);
+@mixin transform-from {
+   -webkit-transform: translate(0px, 0px) rotate(0deg);
+   transform: translate(0px, 0px) rotate(0deg)
+}
+
+@mixin transform-to {
+   -webkit-transform: translate(-$translate-step, 0px) rotate(-90deg);
+   transform: translate(-$translate-step, 0px) rotate(-90deg)
+}
+
+@-webkit-keyframes animsquare1 {
+   0%, 5%, 95%, 100% {
+      @include transform-from
+   }
+   30%, 70% {
+      @include transform-to
    }
 }
 
-// .l_square:nth-child(1) {
-//    margin-left: 0px
-// }
-
-// .l_square:nth-child(2) {
-//    margin-left: 44px
-// }
-
-// .l_square:nth-child(3) {
-//    margin-left: 88px
-// }
-
-// .l_square:nth-child(4) {
-//    margin-left: 132px
-// }
-
-.l_square span {
-   position: absolute;
-   top: 0px;
-   left: 20px;
-   height: 36px;
-   width: 36px;
-   border-radius: 2px;
-   background: rgba(21, 114, 201, 0.7);
+@keyframes animsquare1 {
+   0%, 5%, 95%, 100% {
+      @include transform-from
+   }
+   30%, 70% {
+      @include transform-to
+   }
 }
 
-.l_square span:nth-child(1) {
-   top: 0px
+@-webkit-keyframes animsquare2 {
+   0%, 10%, 90%, 100% {
+      @include transform-from
+   }
+   35%, 65% {
+      @include transform-to
+   }
 }
 
-.l_square span:nth-child(2) {
-   top: 44px
+@keyframes animsquare2 {
+   0%, 10%, 90%, 100% {
+      @include transform-from
+   }
+   35%, 65% {
+      @include transform-to
+   }
 }
 
-.l_square span:nth-child(3) {
-   top: 88px
+@-webkit-keyframes animsquare3 {
+   0%, 15%, 85%, 100% {
+      @include transform-from
+   }
+   40%, 60% {
+      @include transform-to
+   }
 }
 
-.l_square:nth-child(1) span{-webkit-animation:animsquare1 2s infinite ease-in;animation:animsquare1 2s infinite ease-in}
-.l_square:nth-child(2) span{-webkit-animation:animsquare2 2s infinite ease-in;animation:animsquare2 2s infinite ease-in}
-.l_square:nth-child(3) span{-webkit-animation:animsquare3 2s infinite ease-in;animation:animsquare3 2s infinite ease-in}
-.l_square:nth-child(4) span{-webkit-animation:animsquare4 2s infinite ease-in;animation:animsquare4 2s infinite ease-in}
-.l_square span:nth-child(1){-webkit-animation-delay:0.00s;animation-delay:0.00s}
-.l_square span:nth-child(2){-webkit-animation-delay:0.15s;animation-delay:0.15s}
-.l_square span:nth-child(3){-webkit-animation-delay:0.30s;animation-delay:0.30s}
-@-webkit-keyframes animsquare1{0%,5%,95%,100%{-webkit-transform:translate(0px,0px) rotate(0deg);transform:translate(0px,0px) rotate(0deg)}30%,70%{-webkit-transform:translate(-40px,0px) rotate(-90deg);transform:translate(-40px,0px) rotate(-90deg)}}
-@keyframes animsquare1{0%,5%,95%,100%{-webkit-transform:translate(0px,0px) rotate(0deg);transform:translate(0px,0px) rotate(0deg)}30%,70%{-webkit-transform:translate(-40px,0px) rotate(-90deg);transform:translate(-40px,0px) rotate(-90deg)}}
-@-webkit-keyframes animsquare2{0%,10%,90%,100%{-webkit-transform:translate(0px,0px) rotate(0deg);transform:translate(0px,0px) rotate(0deg)}35%,65%{-webkit-transform:translate(-40px,0px) rotate(-90deg);transform:translate(-40px,0px) rotate(-90deg)}}
-@keyframes animsquare2{0%,10%,90%,100%{-webkit-transform:translate(0px,0px) rotate(0deg);transform:translate(0px,0px) rotate(0deg)}35%,65%{-webkit-transform:translate(-40px,0px) rotate(-90deg);transform:translate(-40px,0px) rotate(-90deg)}}
-@-webkit-keyframes animsquare3{0%,15%,85%,100%{-webkit-transform:translate(0px,0px) rotate(0deg);transform:translate(0px,0px) rotate(0deg)}40%,60%{-webkit-transform:translate(-40px,0px) rotate(-90deg);transform:translate(-40px,0px) rotate(-90deg)}}
-@keyframes animsquare3{0%,15%,85%,100%{-webkit-transform:translate(0px,0px) rotate(0deg);transform:translate(0px,0px) rotate(0deg)}40%,60%{-webkit-transform:translate(-40px,0px) rotate(-90deg);transform:translate(-40px,0px) rotate(-90deg)}}
-@-webkit-keyframes animsquare4{0%,20%,80%,100%{-webkit-transform:translate(0px,0px) rotate(0deg);transform:translate(0px,0px) rotate(0deg)}45%,55%{-webkit-transform:translate(-40px,0px) rotate(-90deg);transform:translate(-40px,0px) rotate(-90deg)}}
-@keyframes animsquare4{0%,20%,80%,100%{-webkit-transform:translate(0px,0px) rotate(0deg);transform:translate(0px,0px) rotate(0deg)}45%,55%{-webkit-transform:translate(-40px,0px) rotate(-90deg);transform:translate(-40px,0px) rotate(-90deg)}}
+@keyframes animsquare3 {
+   0%, 15%, 85%, 100% {
+      @include transform-from
+   }
+   40%, 60% {
+      @include transform-to
+   }
+}
+
+@-webkit-keyframes animsquare4 {
+   0%, 20%, 80%, 100% {
+      @include transform-from
+   }
+   45%, 55% {
+      @include transform-to
+   }
+}
+
+@keyframes animsquare4 {
+   0%, 20%, 80%, 100% {
+      @include transform-from
+   }
+   45%, 55% {
+      @include transform-to
+   }
+}

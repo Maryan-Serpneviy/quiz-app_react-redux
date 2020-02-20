@@ -1,23 +1,21 @@
 import React from 'react'
 import './Loader.scss'
 
-const Loader: React.FC = () => (
-   <div className="loader">
-      <div className="l_main">
+export default function Loader() {
+   const loaderCols = []
+   for (let i = 0; i < 4; i++) {
+      loaderCols.push(
          <div className="l_square">
             <span/><span/><span/>
          </div>
-         <div className="l_square">
-            <span/><span/><span/>
-         </div>
-         <div className="l_square">
-            <span/><span/><span/>
-         </div>
-         <div className="l_square">
-            <span/><span/><span/>
+      )
+   }
+
+   return (
+      <div className="loader">
+         <div>
+            {loaderCols}
          </div>
       </div>
-   </div>
-)
-
-export default Loader
+   )
+}
