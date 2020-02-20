@@ -6,7 +6,11 @@
    padding-top: 100px;
    flex-grow: 1;
    width: 100%;
-   background: $grad-bg;
+   background: linear-gradient(
+      90deg,
+      #5041b2 0%,
+      #7969e6 100%
+   );
 
    h1 {
       color: $text-color;
@@ -15,5 +19,5 @@
 }
 
 .wrapper {
-   width: 600px;
+   width: $content-w;
 }

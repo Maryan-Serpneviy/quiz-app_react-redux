@@ -20,10 +20,12 @@ h1, h2, h3, strong {
 }
 
 h1 {
+   text-align: center;
    font-size: 33px;
 }
 
 body {
    padding: 0;
    margin: 0;
+   min-width: 600px;
 }

@@ -1,37 +1,13 @@
 import React, { Component } from 'react'
+import Formic from '~/lib/formic'
 import Input from '~cm/Input'
 import Button from '~cm/Button'
 import classes from './Auth.module.scss'
 
 export default class Auth extends Component {
    state = {
-      isFormValid: false,
-      formControls: {
-         email: {
-            value: '',
-            type: 'email',
-            label: 'Email',
-            error: 'Email is invalid',
-            isTouched: false,
-            isValid: false,
-            validation: {
-               required: true,
-               email: true
-            }
-         },
-         password: {
-            value: '',
-            type: 'password',
-            label: 'Password',
-            error: 'Password is invalid',
-            isTouched: false,
-            isValid: false,
-            validation: {
-               required: true,
-               minLength: 6
-            }
-         }
-      }
+      formControls: this.createFormControls(),
+      isFormValid: false
    }
 
    render() {
@@ -75,50 +51,49 @@ export default class Auth extends Component {
                isTouched={control.isTouched}
                isValid={control.isValid}
                shouldValidate={!!control.validation}
-               handleChange={(e: React.ChangeEvent) => this.handleChange(e, controlName)}
+               handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  this.handleChange(event.target.value, controlName)
+               }}
             />
          )
       })
    }
 
-   handleChange = (event: React.ChangeEvent, controlName: string) => {
+   handleChange = (value: string, controlName: string) => {
       const formControls = { ...this.state.formControls }
       const control = { ...formControls[controlName] }
 
-      control.value = event.target.value
+      control.value = value
       control.isTouched = true
-      control.isValid = this.validateControl(control.value, control.validation)
+      control.isValid = Formic.validate(control.value, control.validation)
 
       formControls[controlName] = control
 
-      let isFormValid = true
-      Object.keys(formControls).forEach(name => {
-         isFormValid = formControls[name].isValid && isFormValid
-      })
-
       this.setState({
-         formControls, isFormValid
+         formControls,
+         isFormValid: Formic.validateForm(formControls)
       })
    }
 
-   validateControl(value: string, validation: object): boolean {
-      if (!validation) {
-         return true
+   createFormControls(): object {
+      return {
+         email: Formic.createControl({
+            type: 'email',
+            label: 'Email',
+            error: 'Email is invalid'
+         }, {
+            required: true,
+            email: true
+         }),
+         password: Formic.createControl({
+            type: 'password',
+            label: 'Password',
+            error: 'Password is invalid'
+         }, {
+            required: true,
+            minLength: 6
+         })
       }
-      let isValid = true
-
-      if (validation.required) {
-         isValid = value.trim() !== '' && isValid
-      }
-      if (validation.email) {
-         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-         isValid = re.test(String(value).toLowerCase()) && isValid
-      }
-      if (validation.minLength) {
-         isValid = value.length >= validation.minLength && isValid
-      }
-
-      return isValid
    }
 
    loginHandler = () => {

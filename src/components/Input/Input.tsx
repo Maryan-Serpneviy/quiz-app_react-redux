@@ -15,7 +15,7 @@ const Input: React.FC<Props> = (props: InferProps<typeof Input.propTypes>) => {
    } = props
 
    const inputType = type || 'text'
-   const htmlFor = `${inputType}-${Math.random()}`
+   const htmlFor = `${inputType}-${Math.round(Math.random() * 1000)}`
    const style = [
       classes.input
    ]

@@ -1,31 +1,31 @@
 @import "../../assets/scss/utils/variables";
 
-.auth {
+.quizCreator {
    display: flex;
    justify-content: center;
-   padding-top: 100px;
+   padding-top: 50px;
    flex-grow: 1;
    width: 100%;
    background: linear-gradient(
       270deg,
-      #cef2fa 0%,
-      #59bfef 100%
+      #f0613c 0%,
+      #f0783c 100%
    );
 
    & > div {
-      width: 100%;
-      max-width: $content-w;
-      padding: 0 20px;
+     width: 100%;
+     max-width: $content-w; 
+     padding: 0 20px;
    }
 
    h1 {
-      color: #fff;
+      color: rgb(124, 33, 0);
    }
 
    form {
       background: #eee;
-      box-shadow: $form-shadow;
-      padding: 15px;
       border-radius: 5px;
+      padding: 15px;
+      box-shadow: $form-shadow;
    }
 }
