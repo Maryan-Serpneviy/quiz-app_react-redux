@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import PropTypes, { InferProps } from 'prop-types'
-import BackDrop from '~cm/Navigation/BackDrop'
+import BackDrop from '@com/Navigation/BackDrop'
 import classes from './Drawer.module.scss'
 
 const links = [

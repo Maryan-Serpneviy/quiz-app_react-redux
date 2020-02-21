@@ -12,11 +12,16 @@ const Path = {
 	
 	containers: path.join(__dirname, '../src/containers'),
 	components: path.join(__dirname, '../src/components'),
+	services: path.join(__dirname, '../src/services'),
 	store: path.join(__dirname, '../src/store'),
 	helpers: path.join(__dirname, '..src/helpers'),
 	hocs: path.join(__dirname, '../src/hocs'),
+	libraries: path.join(__dirname, '../src/lib'),
+	ui: path.join(__dirname, '../src/UI'),
 	images: path.join(__dirname, '../src/assets/images')
 }
+const alias = '@'
+
 const isDev = process.env.NODE_ENV === 'development'
 
 module.exports = {
@@ -128,14 +133,17 @@ module.exports = {
 	],
 	resolve: {
 		alias: {
-			'~': path.resolve(__dirname, Path.src),
-			'~p': path.resolve(__dirname, Path.public),
-			'~cn': path.resolve(__dirname, Path.containers),
-			'~cm': path.resolve(__dirname, Path.components),
-			'~s': path.resolve(__dirname, Path.store),
-			'~hlp': path.resolve(__dirname, Path.helpers),
-			'~hoc': path.resolve(__dirname, Path.hocs),
-			'~i': path.resolve(__dirname, Path.images)
+			[`${alias}`]: path.resolve(__dirname, Path.src),
+			[`${alias}p`]: path.resolve(__dirname, Path.public),
+			[`${alias}con`]: path.resolve(__dirname, Path.containers),
+			[`${alias}com`]: path.resolve(__dirname, Path.components),
+			[`${alias}rest`]: path.resolve(__dirname, Path.services),
+			[`${alias}s`]: path.resolve(__dirname, Path.store),
+			[`${alias}help`]: path.resolve(__dirname, Path.helpers),
+			[`${alias}hoc`]: path.resolve(__dirname, Path.hocs),
+			[`${alias}lib`]: path.resolve(__dirname, Path.libraries),
+			[`${alias}ui`]: path.resolve(__dirname, Path.ui),
+			[`${alias}img`]: path.resolve(__dirname, Path.images)
 		},
 		extensions: ['*', 'css', 'scss', '.js', '.jsx', '.ts', '.tsx', '.json']
 	}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import ActiveQuiz from '~cm/ActiveQuiz'
-import CompletedQuiz from '~cm/CompletedQuiz'
+import Axios from 'axios'
+import ActiveQuiz from '@com/ActiveQuiz'
+import CompletedQuiz from '@com/CompletedQuiz'
 import classes from './Quiz.module.scss'
 
 export default class Quiz extends Component {

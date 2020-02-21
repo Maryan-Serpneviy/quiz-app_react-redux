@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import MenuToggle from '~cm/Navigation/MenuToggle'
-import Drawer from '~cm/Navigation/Drawer'
+import MenuToggle from '@com/Navigation/MenuToggle'
+import Drawer from '@com/Navigation/Drawer'
 import classes from './Layout.module.scss'
 
 const Layout: React.FC = ({ children }) => {

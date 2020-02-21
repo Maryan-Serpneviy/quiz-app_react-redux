@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import Axios from 'axios'
-import Formic from '~/lib/formic'
-import Input from '~cm/Input'
-import Select from '~cm/Select'
-import Button from '~cm/Button'
+import Formic from '@lib/formic'
+import Input from '@com/Input'
+import Select from '@com/Select'
+import Button from '@com/Button'
 import classes from './Creator.module.scss'
 
 export default class Creator extends Component {

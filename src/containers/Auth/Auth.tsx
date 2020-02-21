@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import Formic from '~/lib/formic'
-import Input from '~cm/Input'
-import Button from '~cm/Button'
+import Formic from '@lib/formic'
+import Input from '@com/Input'
+import Button from '@com/Button'
 import classes from './Auth.module.scss'
 
 export default class Auth extends Component {

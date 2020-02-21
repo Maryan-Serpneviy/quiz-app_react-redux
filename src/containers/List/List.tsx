@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import Axios from 'axios'
-import Loader from '~cm/Loader'
+import Loader from '@com/Loader'
 import classes from './List.module.scss'
 
 export default class List extends Component {
@@ -44,8 +44,8 @@ export default class List extends Component {
             <div>
                <h1>Quiz list</h1>
 
-               {!isLoading && <Loader/>}
-               {isLoading && (
+               {isLoading && <Loader/>}
+               {!isLoading && (
                   <ul>
                      {this.renderQuizes()}
                   </ul>
