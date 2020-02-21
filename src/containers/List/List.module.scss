@@ -13,7 +13,6 @@
 
    h1 {
       color: #fff;
-      font-size: 40px;
    }
 
    ul {
@@ -35,5 +34,37 @@
       &:hover {
          color: #363f54;
       }
+   }
+
+   .createQuiz {
+      display: block;
+      text-align: center;
+      font-size: 25px;
+      position: relative;
+      animation: flit 5s ease-in-out 1.5s infinite;
+   }
+}
+
+@keyframes flit {
+   0% {
+      top: 0;
+      left: 0;
+   }
+
+   25% {
+      left: 15px;
+   }
+
+   50% {
+      top: 30px;
+   }
+
+   75% {
+      left: -15px;
+   }
+
+   100% {
+      top: 0;
+      left: 0;
    }
 }

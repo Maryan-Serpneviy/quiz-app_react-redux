@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Axios from 'axios'
+import Axios from '@rest'
 import Formic from '@lib/formic'
 import Input from '@com/Input'
 import Select from '@com/Select'
@@ -9,13 +9,13 @@ import classes from './Creator.module.scss'
 export default class Creator extends Component {
    state = {
       quiz: [],
-      correctId: 1,
+      correct: 1,
       formControls: this.createFormControls(),
       isFormValid: false
    }
 
    render() {
-      const { quiz, correctId, isFormValid } = this.state
+      const { quiz, correct, isFormValid } = this.state
 
       return (
          <div className={classes.quizCreator}>
@@ -27,7 +27,7 @@ export default class Creator extends Component {
                   
                   <Select
                      label="Specify an correct answer"
-                     value={correctId}
+                     value={correct}
                      options={[
                         { text: 1, value: 1 },
                         { text: 2, value: 2 },
@@ -121,7 +121,7 @@ export default class Creator extends Component {
 
    handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
       this.setState({
-         correctId: Number(event.target.value)
+         correct: Number(event.target.value)
       })
    }
 
@@ -135,7 +135,7 @@ export default class Creator extends Component {
       const questionItem = {
          question: question.value,
          id: index,
-         correctId: this.state.correctId,
+         correct: this.state.correct,
          answers: [
             { id: option1.id, text: option1.value },
             { id: option2.id, text: option2.value },
@@ -147,7 +147,7 @@ export default class Creator extends Component {
       this.setState({
          quiz,
          isFormValid: false,
-         correctId: 1,
+         correct: 1,
          formControls: this.createFormControls()
       })
    }
@@ -156,11 +156,11 @@ export default class Creator extends Component {
       event.preventDefault()
 
       try {
-         await Axios.post('https://quiz-app-react-85b48.firebaseio.com/quiz.json', this.state.quiz)
+         await Axios.post('quiz.json', this.state.quiz)
          this.setState({
             quiz: [],
             isFormValid: false,
-            correctId: 1,
+            correct: 1,
             formControls: this.createFormControls()
          })
       } catch (err) {

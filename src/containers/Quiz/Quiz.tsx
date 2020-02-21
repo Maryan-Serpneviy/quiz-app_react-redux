@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import Axios from 'axios'
+import Axios from '@rest'
+import Loader from '@com/Loader'
 import ActiveQuiz from '@com/ActiveQuiz'
 import CompletedQuiz from '@com/CompletedQuiz'
 import classes from './Quiz.module.scss'
@@ -10,41 +11,28 @@ export default class Quiz extends Component {
       answerStatus: null,
       completed: false,
       results: [],
-      quiz: [
-         {
-            id: 1,
-            question: 'What was a question?',
-            answers: [
-               { id: 1, text: 'Answer 1' },
-               { id: 2, text: 'Answer 2' },
-               { id: 3, text: 'Answer 3' },
-               { id: 4, text: 'Answer 4' }
-            ],
-            correct: 2
-         },
-         {
-            id: 2,
-            question: 'What was a question again?',
-            answers: [
-               { id: 1, text: 'Option 1' },
-               { id: 2, text: 'Option 2' },
-               { id: 3, text: 'Option 3' },
-               { id: 4, text: 'Option 4' }
-            ],
-            correct: 3
-         }
-      ]
+      quiz: [],
+      isLoading: true
    }
 
    render() {
-      const { current, quiz, answerStatus, completed, results } = this.state
+      const {
+         isLoading,
+         current,
+         quiz,
+         answerStatus,
+         completed,
+         results
+      } = this.state
 
       return (
          <div className={classes.Quiz}>
             <div className={classes.wrapper}>
                <h1>Quiz</h1>
 
-               {!completed && <ActiveQuiz
+               {isLoading && <Loader />}
+
+               {!isLoading && !completed && <ActiveQuiz
                   current={current + 1}
                   total={quiz.length}
                   question={quiz[current].question}
@@ -53,7 +41,7 @@ export default class Quiz extends Component {
                   status={answerStatus}
                />}
 
-               {completed && (
+               {!isLoading && completed && (
                   <CompletedQuiz
                      quiz={quiz}
                      results={results}
@@ -62,6 +50,18 @@ export default class Quiz extends Component {
             </div>
          </div>
       )
+   }
+
+   async componentDidMount() {
+      try {
+         const response = await Axios.get(`quiz/${this.props.match.params.id}.json`)
+         this.setState({
+            quiz: response.data,
+            isLoading: false
+         })
+      } catch (err) {
+         console.error(err)
+      }
    }
 
    onAnswerClick = (id: number) => {

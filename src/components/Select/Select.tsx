@@ -35,14 +35,14 @@ const Select: React.FC<Props> = (props: InferProps<typeof Select.propTypes>) => 
 
 Select.propTypes = {
    label: PropTypes.string,
-   value: PropTypes.string.isRequired,
+   value: PropTypes.number.isRequired,
    options: PropTypes.array.isRequired,
    onChange: PropTypes.func.isRequired
 }
 
 interface Props {
    label?: string
-   value: string
+   value: number
    options: object[]
    onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void
 }

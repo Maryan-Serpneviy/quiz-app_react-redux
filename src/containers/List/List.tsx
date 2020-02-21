@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
-import { NavLink } from 'react-router-dom'
-import Axios from 'axios'
+import { Link, NavLink } from 'react-router-dom'
+import Axios from '@rest'
 import Loader from '@com/Loader'
 import classes from './List.module.scss'
 
 export default class List extends Component {
    state = {
-      quiz: [],
-      isLoading: true
+      isLoading: true,
+      quiz: []
    }
 
    renderQuizes() {
@@ -20,24 +20,8 @@ export default class List extends Component {
       ))
    }
 
-   async componentDidMount() {
-      try {
-         const response = await Axios.get('https://quiz-app-react-85b48.firebaseio.com/quiz.json')
-         const quiz = Object.keys(response.data).map((key, index) => {
-            return {
-               id: key,
-               name: `Quiz #${index + 1}`
-            }
-         })
-
-         this.setState({ quiz, isLoading: false })
-      } catch (err) {
-         console.error(err)
-      }
-   }
-
    render() {
-      const { isLoading } = this.state
+      const { isLoading, quiz } = this.state
 
       return (
          <div className={classes.quizlist}>
@@ -50,9 +34,28 @@ export default class List extends Component {
                      {this.renderQuizes()}
                   </ul>
                )}
-               
+               {!isLoading && !quiz.length && (
+                  <Link to="/creator" className={classes.createQuiz}>
+                     Create quiz
+                  </Link>
+               )}
             </div>
          </div>
       )
+   }
+
+   async componentDidMount() {
+      try {
+         const response = await Axios.get('quiz.json')
+         const quiz = Object.keys(response.data).map((key, index) => {
+            return {
+               id: key,
+               name: `Quiz #${index + 1}`
+            }
+         })
+         this.setState({ quiz, isLoading: false })
+      } catch (err) {
+         this.setState({ quiz: [], isLoading: false })
+      }
    }
 }
