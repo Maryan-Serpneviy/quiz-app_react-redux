@@ -1,22 +1,46 @@
 $base: 25;
-$speed: 1.4;
+$speed: 8.5;
 
-$style: rgba(21, 114, 201, 0.7);
-$colors: #56c7fa, #f76540, #ffcb05, #62cd9f, #b67baa;
-$repeat: 15; // Warning: a higher number outputs more CSS.
+// static single color
+$color: rgba(21, 114, 201, 0.7);
+// dynamic multiple colors
+$list1:
+   #26A65B, #26A65B, #26A65B, #345A5E, #00AA55, #16A085, #007A7C, #28A228, #03A678,
+   #007A7C, #009FD4, #00A4A6, #4183D7, #527AC2, #4B77BE, #1978d4, #3455DB, #1460AA,
+   #BF6EE0, #E73C70, #D400D4, #B500B5, #AA00AA, #8B008B, #7023B7, #7600A8, #600060,
+   #E63022, #E65722, #D46A43, #D35400, #F64747, #E73C4E, #DC143C, #E00000, #B11030;
+$list2: #56c7fa, #f76540, #ffcb05, #62cd9f, #b67baa;
+// set colors list
+$colors: $list1;
 
-// dynamic colors
-$length: length($colors);
-@for $i from 1 through $length {
-  $colors: append($colors, darken(nth($colors, $i), 20));
-}
+// PRIVATE PART
 // coefs: do not change
 $gap: $base * 1.222;
 $translate-step: $base * 1.111;
+// colors randomizer
+$length: length($colors);
+$repeat: $length; // warning: a higher number outputs more CSS
+@if ($length < 10) {
+   $repeat: $length * 2
+} @else if ($length >= 20) {
+   $repeat: 20 // limit max repeat value
+}
+
+@for $i from 1 through $length {
+   $color-coef: 0;
+   @if ($length < 10) { // if small colors list
+      $color-coef: 10 // apply color func to minimize colors repeat
+   }
+   $colors: append($colors, darken(nth($colors, $i), $color-coef));
+}
+// animation
+@function invertSpeed($value: $speed) {
+   @return (#{1 / ($value / 10)}s)
+}
 
 @mixin apply-animation ($keyframes, $duration: $speed) {
-   -webkit-animation: $keyframes (#{$duration / $duration}s) infinite ease-in;
-   animation: $keyframes (#{$duration / $duration}s) infinite ease-in;
+   -webkit-animation: $keyframes invertSpeed() infinite ease-in;
+   animation: $keyframes invertSpeed() infinite ease-in;
 }
 
 @mixin delay($delay) {
@@ -39,7 +63,7 @@ body {
    height: 100%;
    width: 100%;
 
-   & > div {
+   .wrapper {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -65,7 +89,7 @@ body {
    }
 }
 
-.l_square {
+.square {
    position: relative;
    @for $i from 0 through 3 {
       &:nth-child(#{$i + 1}) {
@@ -95,11 +119,11 @@ body {
       border-radius: 2px;
       
       // single color
-      background: lighten(nth($colors, random(length($colors))), 10%);
+      background: nth($colors, random(length($colors)));
       // multiple colors
-      @for $i from 1 through $length {
+      @for $i from 1 through $repeat {
          &:nth-of-type(#{length($colors)}n+#{$i}) {
-           background: lighten(nth($colors, random(length($colors))), 10%);
+           background: nth($colors, random(length($colors)));
          }
       }
 
