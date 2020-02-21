@@ -5,7 +5,7 @@ export default function Loader() {
    const loaderCols = []
    for (let i = 0; i < 4; i++) {
       loaderCols.push(
-         <div className="l_square">
+         <div className="l_square" key={i}>
             <span/><span/><span/>
          </div>
       )

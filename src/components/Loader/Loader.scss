@@ -1,14 +1,22 @@
-$style: rgba(21, 114, 201, 0.7);
-$base: 25px; // 36
-$speed: 1.4s;
+$base: 25;
+$speed: 1.4;
 
+$style: rgba(21, 114, 201, 0.7);
+$colors: #56c7fa, #f76540, #ffcb05, #62cd9f, #b67baa;
+$repeat: 15; // Warning: a higher number outputs more CSS.
+
+// dynamic colors
+$length: length($colors);
+@for $i from 1 through $length {
+  $colors: append($colors, darken(nth($colors, $i), 20));
+}
 // coefs: do not change
 $gap: $base * 1.222;
 $translate-step: $base * 1.111;
 
 @mixin apply-animation ($keyframes, $duration: $speed) {
-   -webkit-animation: $keyframes $duration infinite ease-in;
-   animation: $keyframes $duration infinite ease-in;
+   -webkit-animation: $keyframes (#{$duration / $duration}s) infinite ease-in;
+   animation: $keyframes (#{$duration / $duration}s) infinite ease-in;
 }
 
 @mixin delay($delay) {
@@ -35,8 +43,8 @@ body {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: $gap * 4;
-      height: $gap * 3;
+      width: $gap * 4px;
+      height: $gap * 3px;
       margin: 0;
       -webkit-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%)
@@ -61,7 +69,7 @@ body {
    position: relative;
    @for $i from 0 through 3 {
       &:nth-child(#{$i + 1}) {
-         margin-left: $gap * $i;
+         margin-left: (#{$gap * $i}px);
       }
    }
 
@@ -82,14 +90,22 @@ body {
       position: absolute;
       top: 0px;
       left: 20px;
-      height: $base;
-      width: $base;
+      height: (#{$base}px);
+      width: (#{$base}px);
       border-radius: 2px;
-      background: $style;
+      
+      // single color
+      background: lighten(nth($colors, random(length($colors))), 10%);
+      // multiple colors
+      @for $i from 1 through $length {
+         &:nth-of-type(#{length($colors)}n+#{$i}) {
+           background: lighten(nth($colors, random(length($colors))), 10%);
+         }
+      }
 
       @for $i from 0 through 2 {
          &:nth-child(#{$i + 1}) {
-            top: $gap * $i;
+            top: (#{$gap * $i}px);
             @include delay(0.15s * $i)
          }
       }
@@ -102,8 +118,8 @@ body {
 }
 
 @mixin transform-to {
-   -webkit-transform: translate(-$translate-step, 0px) rotate(-90deg);
-   transform: translate(-$translate-step, 0px) rotate(-90deg)
+   -webkit-transform: translate(-(#{$translate-step}px), 0px) rotate(-90deg);
+   transform: translate(-(#{$translate-step}px), 0px) rotate(-90deg)
 }
 
 @-webkit-keyframes animsquare1 {
