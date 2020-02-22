@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Axios from '@rest'
 import Loader from '@com/Loader'
+import LoaderSm from '@com/LoaderSm'
 import ActiveQuiz from '@com/ActiveQuiz'
 import CompletedQuiz from '@com/CompletedQuiz'
 import classes from './Quiz.module.scss'
@@ -30,7 +31,7 @@ export default class Quiz extends Component {
             <div className={classes.wrapper}>
                <h1>Quiz</h1>
 
-               {isLoading && <Loader />}
+               {isLoading && <LoaderSm />}
 
                {!isLoading && !completed && <ActiveQuiz
                   current={current + 1}

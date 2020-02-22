@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import Axios from '@rest'
 import Loader from '@com/Loader'
+import LoaderSm from '@com/LoaderSm'
 import classes from './List.module.scss'
 
 export default class List extends Component {
@@ -28,7 +29,7 @@ export default class List extends Component {
             <div>
                <h1>Quiz list</h1>
 
-               {isLoading && <Loader/>}
+               {isLoading && <LoaderSm/>}
                {!isLoading && (
                   <ul>
                      {this.renderQuizes()}
