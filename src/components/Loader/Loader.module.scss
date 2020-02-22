@@ -20,17 +20,16 @@ $translate-step: $base * 1.111;
 // colors randomizer
 $length: length($colors);
 $repeat: $length; // warning: a higher number outputs more CSS
-@if ($length < 10) {
-   $repeat: $length * 2
-} @else if ($length >= 20) {
+$color-coef: 0; // value for color func
+// optimization
+@if ($length < 10) { // if small colors list
+   $repeat: $length * 2; // increased range
+   $color-coef: 10 // apply color func to minimize colors repeat
+} @else if ($length >= 20) { // if large list
    $repeat: 20 // limit max repeat value
 }
 
 @for $i from 1 through $length {
-   $color-coef: 0;
-   @if ($length < 10) { // if small colors list
-      $color-coef: 10 // apply color func to minimize colors repeat
-   }
    $colors: append($colors, darken(nth($colors, $i), $color-coef));
 }
 // animation
