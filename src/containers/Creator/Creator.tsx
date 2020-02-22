@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import Axios from '@rest'
 import Formic from '@lib/formic'
 import Input from '@com/Input'
@@ -6,6 +7,7 @@ import Select from '@com/Select'
 import Button from '@com/Button'
 import classes from './Creator.module.scss'
 
+@withRouter
 export default class Creator extends Component {
    state = {
       quiz: [],
@@ -22,11 +24,15 @@ export default class Creator extends Component {
             <div>
                <h1>Quiz creation</h1>
 
+               <div className={classes.count}>
+                  Questions: {quiz.length}
+               </div>
+
                <form onSubmit={e => e.preventDefault()}>
                   {this.renderInputs()}
                   
                   <Select
-                     label="Specify an correct answer"
+                     label="Provide the correct answer"
                      value={correct}
                      options={[
                         { text: 1, value: 1 },
@@ -60,6 +66,7 @@ export default class Creator extends Component {
 
    renderInputs() {
       const { formControls } = this.state
+
       return Object.keys(formControls).map((controlName, index) => {
          const control = formControls[controlName]
 
@@ -98,6 +105,19 @@ export default class Creator extends Component {
       })
    }
 
+   get quizName(): object {
+      const name = {
+         label: 'Provide the quiz name',
+         error: 'Name is too short or contains digits'
+      }
+      if (this.state) { // state is initialized
+         name.value = this.state.formControls.name.value
+         name.isTouched = true
+         name.isValid = true
+      }
+      return name
+   }
+
    createFormControls(): object {
       return {
          question: Formic.createControl({
@@ -107,14 +127,19 @@ export default class Creator extends Component {
          option1: this.createOption(1),
          option2: this.createOption(2),
          option3: this.createOption(3),
-         option4: this.createOption(4)
+         option4: this.createOption(4),
+         name: Formic.createControl({ ...this.quizName }, {
+            required: true,
+            name: true,
+            minLength: 8
+         })
       }
    }
 
    createOption(next: number): object {
       return Formic.createControl({
          id: next,
-         label: `Option ${next}`,
+         label: `Answer ${next}`,
          error: 'Cannot be empty'
       }, { required: true })
    }
@@ -128,10 +153,23 @@ export default class Creator extends Component {
    addQuestion = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault()
 
-      const { question, option1, option2, option3, option4 } = this.state.formControls
-      const quiz = this.state.quiz.concat()
+      const hasDuplicates = Formic.containsDuplicates(this.state.formControls)
+      if (hasDuplicates) {
+         // show error and return
+      }
+
+      const {
+         question,
+         option1,
+         option2,
+         option3,
+         option4
+      } = this.state.formControls
+
+      const quiz = this.state.quiz.concat() // create quiz copy
       const index = quiz.length + 1
 
+      quiz[name] = name // for persist the quiz name
       const questionItem = {
          question: question.value,
          id: index,
@@ -156,13 +194,16 @@ export default class Creator extends Component {
       event.preventDefault()
 
       try {
-         await Axios.post('quiz.json', this.state.quiz)
+         const response = await Axios.post('quiz.json', this.state.quiz)
          this.setState({
             quiz: [],
             isFormValid: false,
             correct: 1,
             formControls: this.createFormControls()
          })
+         if (response.statusText === 'OK') {
+            this.props.history.push('/') // go to quiz list
+         }
       } catch (err) {
          console.error(err)
       }

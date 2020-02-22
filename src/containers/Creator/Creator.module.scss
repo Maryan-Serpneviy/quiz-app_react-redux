@@ -28,4 +28,12 @@
       padding: 15px;
       box-shadow: $form-shadow;
    }
+
+   .count {
+      color: $text-color;
+      display: flex;
+      justify-content: flex-end;
+      padding: 0 10px 10px 0;
+      text-shadow: 3px 3px 3px #1d1b1b;
+   }
 }
