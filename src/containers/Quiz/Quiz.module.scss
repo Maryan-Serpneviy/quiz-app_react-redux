@@ -8,12 +8,14 @@
    width: 100%;
    background: linear-gradient(
       90deg,
-      #5041b2 0%,
-      #7969e6 100%
+      #007A7C 0%,
+      #00A4A6 50%,
+      #009FD4 100%
    );
 
    h1 {
       color: $text-color;
+      text-shadow: $text-shadow;
       margin-left: 10px;
    }
 }

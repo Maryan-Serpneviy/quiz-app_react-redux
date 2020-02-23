@@ -6,15 +6,21 @@
    border: 2px solid $text-color;
    border-radius: 5px;
    margin: 0 10px;
+   position: relative;
 
    small {
-      width: 60px;
+      position: absolute;
+      right: 5px;
+      top: 10px;
+      width: 70px;
    }
 }
 
 .question {
    display: flex;
    justify-content: space-between;
+   text-shadow: $text-shadow;
+   font-size: 18px;
 }
 
 .options {

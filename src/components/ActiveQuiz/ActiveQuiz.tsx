@@ -21,7 +21,7 @@ const ActiveQuiz: React.FC<Props> = (props: InferProps<typeof ActiveQuiz.propTyp
                {question}
             </span>
 
-            <small>{current} of {total}</small>
+            <small>{current} / {total}</small>
          </p>
 
          <ul className={classes.options}>

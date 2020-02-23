@@ -1,3 +1,5 @@
+@import "../../assets/scss/utils/variables";
+
 .quizlist {
    display: flex;
    justify-content: center;
@@ -6,13 +8,14 @@
    width: 100%;
    background: linear-gradient(
       90deg,
-      #fd8355 0%,
-      #f0576c 37%,
-      #f79cbd 100%
+      rgb(202, 88, 202) 0%,
+      rgb(117, 156, 228) 60%,
+      rgb(145, 229, 235) 100%
    );
 
    h1 {
       color: #fff;
+      text-shadow: $text-shadow;
    }
 
    ul {
@@ -30,9 +33,10 @@
    a {
       text-decoration: none;
       color: #fff;
+      text-shadow: $text-shadow;
 
       &:hover {
-         color: #363f54;
+         text-shadow: none;
       }
    }
 

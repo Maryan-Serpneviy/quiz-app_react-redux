@@ -8,8 +8,9 @@
    width: 100%;
    background: linear-gradient(
       270deg,
-      #f0613c 0%,
-      #f0783c 100%
+      #15ac79 0%,
+      #12a574 50%,
+      #6dc7a9 100%
    );
 
    & > div {
@@ -19,7 +20,8 @@
    }
 
    h1 {
-      color: rgb(124, 33, 0);
+      color: $text-color;
+      text-shadow: $text-shadow;
    }
 
    form {
@@ -34,7 +36,7 @@
       display: flex;
       justify-content: flex-end;
       padding: 0 10px 10px 0;
-      text-shadow: 3px 3px 3px #1d1b1b;
+      text-shadow: $text-shadow;
    }
 
    .error {
