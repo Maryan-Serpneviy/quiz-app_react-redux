@@ -36,4 +36,12 @@
       padding: 0 10px 10px 0;
       text-shadow: 3px 3px 3px #1d1b1b;
    }
+
+   .error {
+      font-size: 14px;
+      color: $danger-color;
+      font-weight: bold;
+      word-spacing: 0px;
+      padding: 5px 0 0 4px;
+   }
 }

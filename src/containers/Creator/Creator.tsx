@@ -58,6 +58,10 @@ export default class Creator extends Component {
                   >
                      Create quiz
                   </Button>
+                  
+                  {!isFormValid && (
+                     <div className={classes.error}>Empty or repeating fields</div>
+                  )}
                </form>
             </div>
          </div>
@@ -122,8 +126,11 @@ export default class Creator extends Component {
       return {
          question: Formic.createControl({
             label: 'Enter question',
-            error: 'Cannot be empty'
-         }, { required: true }),
+            error: 'Question is too short'
+         }, {
+            required: true,
+            minLength: 20
+         }),
          option1: this.createOption(1),
          option2: this.createOption(2),
          option3: this.createOption(3),
@@ -152,11 +159,6 @@ export default class Creator extends Component {
 
    addQuestion = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault()
-
-      const hasDuplicates = Formic.containsDuplicates(this.state.formControls)
-      if (hasDuplicates) {
-         // show error and return
-      }
 
       const {
          question,

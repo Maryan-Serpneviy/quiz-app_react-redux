@@ -1,3 +1,5 @@
+@import "../../assets/scss/utils/variables";
+
 .input {
    margin-bottom: 15px;
 
@@ -24,12 +26,12 @@
    }
 
    span {
-      color: #f01f30;
+      color: $danger-color;
       font-size: 12px;
       font-weight: bold;
    }
 
    &.invalid label {
-      color: #f01f30;
+      color: $danger-color;
    }
 }
