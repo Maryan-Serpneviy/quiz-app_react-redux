@@ -10,7 +10,9 @@ import classes from './Creator.module.scss'
 @withRouter
 export default class Creator extends Component {
    state = {
-      quiz: [],
+      quiz: {
+         items: []
+      },
       correct: 1,
       formControls: this.createFormControls(),
       isFormValid: false
@@ -25,7 +27,7 @@ export default class Creator extends Component {
                <h1>Quiz creation</h1>
 
                <div className={classes.count}>
-                  Questions: {quiz.length}
+                  Questions: {quiz.items.length}
                </div>
 
                <form onSubmit={e => e.preventDefault()}>
@@ -53,7 +55,7 @@ export default class Creator extends Component {
 
                   <Button
                      type="success"
-                     disabled={!quiz.length}
+                     disabled={!quiz.items.length}
                      onClick={this.createQuiz}
                   >
                      Create quiz
@@ -169,8 +171,8 @@ export default class Creator extends Component {
          name
       } = this.state.formControls
 
-      const quiz = this.state.quiz.concat() // create quiz copy
-      const index = quiz.length + 1
+      const items = this.state.quiz.items.concat() // create items copy
+      const index = items.length + 1
       const questionItem = {
          question: question.value,
          id: index,
@@ -182,13 +184,15 @@ export default class Creator extends Component {
             { id: option4.id, text: option4.value }
          ]
       }
-      quiz.push(questionItem)
-      quiz[name] = name.value // to persist quiz name
+      items.push(questionItem)
 
       this.setState({
-         quiz,
-         isFormValid: false,
+         quiz: {
+            name: name.value,
+            items
+         },
          correct: 1,
+         isFormValid: false,
          formControls: this.createFormControls()
       })
    }
@@ -198,10 +202,12 @@ export default class Creator extends Component {
 
       try {
          const response = await Axios.post('quiz.json', this.state.quiz)
-         this.setState({
-            quiz: [],
-            isFormValid: false,
+         this.setState({ // reset state
+            quiz: {
+               items: []
+            },
             correct: 1,
+            isFormValid: false,
             formControls: this.createFormControls()
          })
          if (response.statusText === 'OK') {

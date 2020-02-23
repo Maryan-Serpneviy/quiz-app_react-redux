@@ -57,7 +57,7 @@ export default class Quiz extends Component {
       try {
          const response = await Axios.get(`quiz/${this.props.match.params.id}.json`)
          this.setState({
-            quiz: response.data,
+            quiz: response.data.items,
             isLoading: false
          })
       } catch (err) {
