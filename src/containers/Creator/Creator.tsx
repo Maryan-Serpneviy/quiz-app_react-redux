@@ -165,13 +165,12 @@ export default class Creator extends Component {
          option1,
          option2,
          option3,
-         option4
+         option4,
+         name
       } = this.state.formControls
 
       const quiz = this.state.quiz.concat() // create quiz copy
       const index = quiz.length + 1
-
-      quiz[name] = name // for persist the quiz name
       const questionItem = {
          question: question.value,
          id: index,
@@ -184,6 +183,8 @@ export default class Creator extends Component {
          ]
       }
       quiz.push(questionItem)
+      quiz[name] = name.value // to persist quiz name
+
       this.setState({
          quiz,
          isFormValid: false,
@@ -204,7 +205,7 @@ export default class Creator extends Component {
             formControls: this.createFormControls()
          })
          if (response.statusText === 'OK') {
-            this.props.history.push('/') // go to quiz list
+            this.props.history.push('/') // go to list
          }
       } catch (err) {
          console.error(err)

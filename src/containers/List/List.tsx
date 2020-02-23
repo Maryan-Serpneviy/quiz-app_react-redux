@@ -48,12 +48,10 @@ export default class List extends Component {
    async componentDidMount() {
       try {
          const response = await Axios.get('quiz.json')
-         const quiz = Object.keys(response.data).map((key, index) => {
-            return {
-               id: key,
-               name: `Quiz #${index + 1}`
-            }
-         })
+         const quiz = Object.values(response.data).map(value => ({
+               id: value,
+               name: value.name
+         }))
          this.setState({ quiz, isLoading: false })
       } catch (err) {
          this.setState({ quiz: [], isLoading: false })
