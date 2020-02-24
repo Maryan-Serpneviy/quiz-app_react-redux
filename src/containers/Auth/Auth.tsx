@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Axios from 'axios'
 import Formic from '@lib/formic'
 import Input from '@com/Input'
 import Button from '@com/Button'
@@ -96,11 +97,37 @@ export default class Auth extends Component {
       }
    }
 
-   loginHandler = () => {
-      //
+   loginHandler = async () => {
+      const authData = {
+         email: this.state.formControls.email.value,
+         password: this.state.formControls.password.value,
+         returnSecureToken: true
+      }
+      try {
+         const response = await Axios.post(
+            'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBiPy_ZxHNmvqoORd_czjiS4dchO8TZR20',
+            authData
+         )
+         console.log(response.data)
+      } catch (err) {
+         console.error(err)
+      }
    }
 
-   registrationHandler = () => {
-      //
+   registrationHandler = async () => {
+      const authData = {
+         email: this.state.formControls.email.value,
+         password: this.state.formControls.password.value,
+         returnSecureToken: true
+      }
+      try {
+         const response = await Axios.post(
+            'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBiPy_ZxHNmvqoORd_czjiS4dchO8TZR20',
+            authData
+         )
+         console.log(response.data)
+      } catch (err) {
+         console.error(err)
+      }
    }
 }
