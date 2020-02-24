@@ -5,6 +5,7 @@ import LoaderSm from '@com/LoaderSm'
 import ActiveQuiz from '@com/ActiveQuiz'
 import CompletedQuiz from '@com/CompletedQuiz'
 import classes from './Quiz.module.scss'
+import { shuffle } from '@/helpers/shuffle'
 
 export default class Quiz extends Component {
    state = {
@@ -56,8 +57,9 @@ export default class Quiz extends Component {
    async componentDidMount() {
       try {
          const response = await Axios.get(`quiz/${this.props.match.params.id}.json`)
+         const quiz = shuffle(response.data.items)
          this.setState({
-            quiz: response.data.items,
+            quiz,
             isLoading: false
          })
       } catch (err) {
@@ -66,14 +68,7 @@ export default class Quiz extends Component {
    }
 
    onAnswerClick = (id: number) => {
-      const { current, quiz, answerStatus, results } = this.state
-
-      if (answerStatus) { // exclude bug if multiple clicks
-         const key = Object.keys(answerStatus)[0]
-         if (answerStatus[key] === 'correct') {
-            return
-         }
-      }
+      const { current, quiz, results } = this.state
 
       this.useDelay()
 
@@ -93,14 +88,22 @@ export default class Quiz extends Component {
    }
 
    useDelay() {
+      const { answerStatus } = this.state
       const timeout = window.setTimeout(() => {
          if (this.isQuizCompleted()) {
             this.setState({ completed: true })
          } else {
-            this.setState({
-               current: this.state.current + 1,
-               answerStatus: null
-            })
+            if (answerStatus) { // exclude bug if multiple clicks
+               const key = Object.keys(answerStatus)[0]
+               if (answerStatus[key] === 'correct') {
+                  return
+               }
+            } else {
+               this.setState({
+                  current: this.state.current + 1,
+                  answerStatus: null
+               })
+            }
          }
          window.clearTimeout(timeout)
       }, 1000)

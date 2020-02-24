@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import PropTypes, { InferProps } from 'prop-types'
 import AnswerOption from './AnswerOption'
 import classes from './ActiveQuiz.module.scss'
+import { shuffle } from '@/helpers/shuffle'
+const clone = require('rfdc')()
 
 const ActiveQuiz: React.FC<Props> = (props: InferProps<typeof ActiveQuiz.propTypes>) => {
    const {
@@ -12,6 +14,19 @@ const ActiveQuiz: React.FC<Props> = (props: InferProps<typeof ActiveQuiz.propTyp
       status,
       onAnswerClick
    } = props
+
+   let cached = useRef(null) // persist once shuffled answers between renders
+
+   const getAnswers = (items: object[] = answers): object[] => {
+      let shuffled
+      if (!status) {
+         shuffled = clone(shuffle(items))
+         cached.current = [...shuffled]
+      } else if (status) {
+         shuffled = [...cached.current]
+      }
+      return shuffled
+   }
 
    return (
       <div className={classes.ActiveQuiz}>
@@ -25,7 +40,7 @@ const ActiveQuiz: React.FC<Props> = (props: InferProps<typeof ActiveQuiz.propTyp
          </p>
 
          <ul className={classes.options}>
-            {answers.map((answer, index) => (
+            {getAnswers().map((answer, index) => (
                <AnswerOption
                   key={index}
                   answer={answer}
