@@ -1,69 +1,67 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
+import PropTypes, { InferProps } from 'prop-types'
 import { Link, NavLink } from 'react-router-dom'
-import Axios from '@rest'
+import { connect } from 'react-redux'
+import { fetchQuizes } from '@s/actions/quiz'
 import Loader from '@com/Loader'
 import LoaderSm from '@com/LoaderSm'
 import classes from './List.module.scss'
 
-export default class List extends Component {
-   state = {
-      isLoading: true,
-      quiz: []
-   }
+const List: React.FC<Props> = ({
+   // eslint-disable-next-line no-shadow
+   fetchQuizes, isLoading, quizList }
+   : InferProps<typeof List.propTypes>) => {
 
-   renderQuizes() {
-      return this.state.quiz.map(quiz => (
-         <li key={quiz.id}>
-            <NavLink to={`/quiz/${quiz.id}`}>
-               {quiz.name}
-            </NavLink>
-         </li>
-      ))
-   }
+   useEffect(() => {
+      fetchQuizes()
+   }, [])
 
-   render() {
-      const { isLoading, quiz } = this.state
+   return (
+      <div className={classes.quizlist}>
+         <div>
+            <h1>Quiz list</h1>
 
-      return (
-         <div className={classes.quizlist}>
-            <div>
-               <h1>Quiz list</h1>
-
-               {isLoading && <LoaderSm/>}
-               {!isLoading && (
-                  <ul>
-                     {this.renderQuizes()}
-                  </ul>
-               )}
-               {!isLoading && !quiz.length && (
-                  <Link to="/creator" className={classes.createQuiz}>
-                     Create quiz
-                  </Link>
-               )}
-            </div>
+            {isLoading && <LoaderSm/>}
+            {!isLoading && (
+               <ul>
+                  {quizList.map((quiz: object) => (
+                     <li key={quiz.id}>
+                        <NavLink to={`/quiz/${quiz.id}`}>
+                           {quiz.name}
+                        </NavLink>
+                     </li>
+                  ))}
+               </ul>
+            )}
+            {!isLoading && !quizList.length && (
+               <Link to="/creator" className={classes.createQuiz}>
+                  Create quiz
+               </Link>
+            )}
          </div>
-      )
-   }
-
-   async componentDidMount() {
-      try {
-         const response = await Axios.get('quiz.json')
-         const quiz = Object.entries(response.data).map(entry => {
-            const [id, data] = entry
-            return {
-               id,
-               name: data.name
-            }
-         })
-         this.setState({
-            quiz,
-            isLoading: false
-         })
-      } catch (err) {
-         this.setState({
-            quiz: [],
-            isLoading: false
-         })
-      }
-   }
+      </div>
+   )
 }
+
+List.propTypes = {
+   isLoading: PropTypes.bool.isRequired,
+   quizList: PropTypes.array.isRequired,
+   fetchQuizes: PropTypes.func.isRequired
+}
+
+interface Props {
+   isLoading: boolean
+   quizList: object[]
+   fetchQuizes: () => object
+}
+
+const mapStateToProps = (state): object => ({
+   quizList: state.quiz.quizList,
+   isLoading: state.quiz.isLoading
+})
+
+const mapDispatchToProps = (dispatch): object => ({
+   fetchQuizes: () => dispatch(fetchQuizes())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(List)
