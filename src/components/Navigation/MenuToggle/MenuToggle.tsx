@@ -25,7 +25,7 @@ MenuToggle.propTypes = {
    isOpen: PropTypes.bool.isRequired
 }
 
-interface Props {
+type Props = {
    toggleMenu: () => void
    isOpen: boolean
 }

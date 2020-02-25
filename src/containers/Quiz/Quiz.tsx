@@ -68,9 +68,12 @@ Quiz.propTypes = {
    restartQuiz: PropTypes.func.isRequired
 }
 
-interface Props {
+type Props = {
    isLoading: boolean
-   quiz: object[]
+   quiz: [{
+      question: string,
+      answers: object[]
+   }]
    current: number
    answerStatus: null | object
    completed: boolean
@@ -80,7 +83,7 @@ interface Props {
    restartQuiz: () => void
 }
 
-const mapStateToProps = (state): object => ({
+const mapStateToProps = (state: { quiz: Props }) => ({
    isLoading: state.quiz.isLoading,
    quiz: state.quiz.quiz,
    current: state.quiz.current,
@@ -89,7 +92,7 @@ const mapStateToProps = (state): object => ({
    results: state.quiz.results
 })
 
-const mapDispatchToProps = (dispatch): object => ({
+const mapDispatchToProps = (dispatch: Action) => ({
    fetchQuiz: (id: string) => dispatch(Action.fetchQuiz(id)),
    onAnswerClick: (id: number) => dispatch(Action.onAnswerClick(id)),
    restartQuiz: () => dispatch(Action.restartQuiz())

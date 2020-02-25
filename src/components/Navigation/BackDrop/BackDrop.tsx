@@ -13,7 +13,7 @@ BackDrop.propTypes = {
    hideMenu: PropTypes.func.isRequired
 }
 
-interface Props {
+type Props = {
    hideMenu: () => void
 }
 

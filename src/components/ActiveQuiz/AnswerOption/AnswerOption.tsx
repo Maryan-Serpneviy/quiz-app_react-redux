@@ -2,8 +2,10 @@ import React from 'react'
 import PropTypes, { InferProps } from 'prop-types'
 import classes from './AnswerOption.module.scss'
 
-const AnswerOption: React.FC<Props> = (props: InferProps<typeof AnswerOption.propTypes>) => {
-   const { answer, status, onAnswerClick } = props
+const AnswerOption: React.FC<Props> = ({
+   answer, status, onAnswerClick
+}: InferProps<typeof AnswerOption.propTypes>) => {
+   
    const styles = [classes.item]
 
    if (status) {
@@ -26,9 +28,12 @@ AnswerOption.propTypes = {
    status: PropTypes.string
 }
 
-interface Props {
+type Props = {
    onAnswerClick: (id: number) => void
-   answer: object
+   answer: {
+      id: number
+      text: string
+   }
    status?: string
 }
 

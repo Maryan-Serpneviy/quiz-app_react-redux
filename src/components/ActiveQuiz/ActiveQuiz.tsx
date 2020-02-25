@@ -62,7 +62,7 @@ ActiveQuiz.propTypes = {
    status: PropTypes.object
 }
 
-interface Props {
+type Props = {
    current: number
    total?: number
    question: string

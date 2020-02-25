@@ -4,8 +4,10 @@ import { useHistory } from 'react-router-dom'
 import Button from '@com/Button'
 import classes from './CompletedQuiz.module.scss'
 
-const CompletedQuiz: React.FC<Props> = (props: InferProps<typeof CompletedQuiz.propTypes>) => {
-   const { quiz, results, restartQuiz } = props
+const CompletedQuiz: React.FC<Props> = ({
+   quiz, results, restartQuiz
+}: InferProps<typeof CompletedQuiz.propTypes>) => {
+   
    const history = useHistory()
 
    const getSuccessRate = () => {
@@ -46,7 +48,7 @@ CompletedQuiz.propTypes = {
    restartQuiz: PropTypes.func
 }
 
-interface Props {
+type Props = {
    quiz: object[]
    results: string[]
    restartQuiz: () => void

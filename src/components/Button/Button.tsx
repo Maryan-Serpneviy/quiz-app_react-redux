@@ -3,7 +3,7 @@ import PropTypes, { InferProps } from 'prop-types'
 import classes from './Button.module.scss'
 
 const Button: React.FC<Props> = (props: InferProps<typeof Button.propTypes>) => {
-   const { onClick, disabled } = props
+   const { onClick, disabled, children } = props
    const style = [
       classes.button,
       classes[props.type]
@@ -15,7 +15,7 @@ const Button: React.FC<Props> = (props: InferProps<typeof Button.propTypes>) => 
          onClick={onClick}
          disabled={disabled}
       >
-         {props.children}
+         {children}
       </button>
    )
 }
@@ -25,9 +25,10 @@ Button.propTypes = {
    disabled: PropTypes.bool
 }
 
-interface Props {
+type Props = {
    onClick: () => void
    disabled: boolean
+   children: JSX.Element[] | JSX.Element
 }
 
 export default Button

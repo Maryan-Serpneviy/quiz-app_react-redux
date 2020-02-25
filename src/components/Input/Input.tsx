@@ -2,17 +2,16 @@ import React from 'react'
 import PropTypes, { InferProps } from 'prop-types'
 import classes from './Input.module.scss'
 
-const Input: React.FC<Props> = (props: InferProps<typeof Input.propTypes>) => {
-   const {
-      label,
-      type,
-      value,
-      error,
-      isTouched,
-      isValid,
-      shouldValidate,
-      handleChange
-   } = props
+const Input: React.FC<Props> = ({
+   label,
+   type,
+   value,
+   error,
+   isTouched,
+   isValid,
+   shouldValidate,
+   handleChange
+}: InferProps<typeof Input.propTypes>) => {
 
    const inputType = type || 'text'
    const htmlFor = `${inputType}-${Math.round(Math.random() * 1000)}`

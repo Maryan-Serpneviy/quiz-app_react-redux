@@ -48,7 +48,7 @@ Drawer.propTypes = {
    hideMenu: PropTypes.func.isRequired
 }
 
-interface Props {
+type Props = {
    isOpen: boolean
    hideMenu: () => void
 }

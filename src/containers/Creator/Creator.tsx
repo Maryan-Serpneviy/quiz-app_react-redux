@@ -238,11 +238,11 @@ type Control = {
    isValid?: boolean
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: { creator: Props }) => ({
    quiz: state.creator.quiz
 })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: any) => ({
    updateQuiz: (item: object, name: string) => dispatch(Action.updateQuiz(item, name)),
    uploadQuiz: () => dispatch(Action.uploadQuiz())
 })

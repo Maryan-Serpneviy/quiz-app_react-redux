@@ -2,13 +2,9 @@ import React from 'react'
 import PropTypes, { InferProps } from 'prop-types'
 import classes from './Select.module.scss'
 
-const Select: React.FC<Props> = (props: InferProps<typeof Select.propTypes>) => {
-   const {
-      label,
-      value,
-      options,
-      onChange
-   } = props
+const Select: React.FC<Props> = ({
+   label, value, options, onChange
+}: InferProps<typeof Select.propTypes>) => {
 
    const htmlFor = `${label}-${Math.round(Math.random() * 1000)}`
 
@@ -20,7 +16,7 @@ const Select: React.FC<Props> = (props: InferProps<typeof Select.propTypes>) => 
             value={value}
             onChange={onChange}
          >
-            {options.map((option, index) => (
+            {options.map((option: { value: string, text: string }, index) => (
                <option
                   key={option.value + index}
                   value={option.value}
@@ -40,7 +36,7 @@ Select.propTypes = {
    onChange: PropTypes.func.isRequired
 }
 
-interface Props {
+type Props = {
    label?: string
    value: number
    options: object[]

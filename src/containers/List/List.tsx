@@ -24,7 +24,7 @@ const List: React.FC<Props> = ({
             {isLoading && <LoaderSm/>}
             {!isLoading && (
                <ul>
-                  {quizList.map((quiz: object) => (
+                  {quizList.map((quiz: { id: number, name: string }) => (
                      <li key={quiz.id}>
                         <NavLink to={`/quiz/${quiz.id}`}>
                            {quiz.name}
@@ -49,18 +49,18 @@ List.propTypes = {
    fetchQuizes: PropTypes.func.isRequired
 }
 
-interface Props {
+type Props = {
    isLoading: boolean
    quizList: object[]
    fetchQuizes: () => object
 }
 
-const mapStateToProps = (state): object => ({
+const mapStateToProps = (state: { quiz: Props }) => ({
    quizList: state.quiz.quizList,
    isLoading: state.quiz.isLoading
 })
 
-const mapDispatchToProps = (dispatch): object => ({
+const mapDispatchToProps = (dispatch: any) => ({
    fetchQuizes: () => dispatch(fetchQuizes())
 })
 
