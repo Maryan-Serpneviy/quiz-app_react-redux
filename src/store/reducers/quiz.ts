@@ -24,7 +24,7 @@ interface State {
    results: object[]
 }
 
-export interface Action extends State {
+interface Action extends State {
    type: string
 }
 

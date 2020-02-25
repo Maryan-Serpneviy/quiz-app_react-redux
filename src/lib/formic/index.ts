@@ -1,3 +1,10 @@
+type Validation = {
+   required: boolean
+   email: boolean
+   name: boolean
+   minLength: number
+}
+
 class Formic {
    createControl(config: object, validation: object): object {
       return {
@@ -9,7 +16,7 @@ class Formic {
       }
    }
 
-   validate(value: string, validation: object = null): boolean {
+   validate(value: string, validation: Validation = null): boolean {
       if (!validation) {
          return true
       }

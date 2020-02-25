@@ -51,7 +51,7 @@ Input.propTypes = {
    handleChange: PropTypes.func.isRequired
 }
 
-interface Props {
+type Props = {
    label?: string
    type?: string
    value?: string
