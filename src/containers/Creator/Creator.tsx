@@ -1,25 +1,46 @@
-import React, { Component } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
-import Axios from '@rest'
+import { connect } from 'react-redux'
+import * as Action from '@s/actions/creator'
 import Formic from '@lib/formic'
 import Input from '@com/Input'
 import Select from '@com/Select'
 import Button from '@com/Button'
 import classes from './Creator.module.scss'
 
+type Props = {
+   quiz: {
+      name: string
+      items: object[]
+   }
+   updateQuiz: (item: object, name: string) => void
+   uploadQuiz: () => void
+}
+
+type State = {
+   correct: number
+   formControls: object
+   isFormValid: boolean
+}
+
 @withRouter
-export default class Creator extends Component {
-   state = {
-      quiz: {
-         items: []
-      },
+class Creator extends React.Component<Props, State> {
+   static propTypes = {
+      quiz: PropTypes.object.isRequired,
+      updateQuiz: PropTypes.func.isRequired,
+      uploadQuiz: PropTypes.func.isRequired
+   }
+
+   state: Readonly<State> = {
       correct: 1,
       formControls: this.createFormControls(),
       isFormValid: false
    }
 
    render() {
-      const { quiz, correct, isFormValid } = this.state
+      const { correct, isFormValid } = this.state
+      const { items } = this.props.quiz
 
       return (
          <div className={classes.quizCreator}>
@@ -27,7 +48,7 @@ export default class Creator extends Component {
                <h1>Quiz creation</h1>
 
                <div className={classes.count}>
-                  Questions: {quiz.items.length}
+                  Questions: {items.length}
                </div>
 
                <form onSubmit={e => e.preventDefault()}>
@@ -55,7 +76,7 @@ export default class Creator extends Component {
 
                   <Button
                      type="success"
-                     disabled={!quiz.items.length}
+                     disabled={!this.props.quiz.items.length}
                      onClick={this.createQuiz}
                   >
                      Create quiz
@@ -72,7 +93,7 @@ export default class Creator extends Component {
 
    renderInputs() {
       const { formControls } = this.state
-
+      
       return Object.keys(formControls).map((controlName, index) => {
          const control = formControls[controlName]
 
@@ -111,8 +132,8 @@ export default class Creator extends Component {
       })
    }
 
-   get quizName(): object {
-      const name = {
+   get quizName(): Control {
+      const name: Control = {
          label: 'Provide the quiz name',
          error: 'Name is too short or contains digits'
       }
@@ -145,7 +166,7 @@ export default class Creator extends Component {
       }
    }
 
-   createOption(next: number): object {
+   createOption(next: number): Control {
       return Formic.createControl({
          id: next,
          label: `Answer ${next}`,
@@ -170,12 +191,10 @@ export default class Creator extends Component {
          option4,
          name
       } = this.state.formControls
-
-      const items = this.state.quiz.items.concat() // create items copy
-      const index = items.length + 1
+      
       const questionItem = {
          question: question.value,
-         id: index,
+         id: this.props.quiz.items.length + 1,
          correct: this.state.correct,
          answers: [
             { id: option1.id, text: option1.value },
@@ -184,13 +203,10 @@ export default class Creator extends Component {
             { id: option4.id, text: option4.value }
          ]
       }
-      items.push(questionItem)
+
+      this.props.updateQuiz(questionItem, name.value)
 
       this.setState({
-         quiz: {
-            name: name.value,
-            items
-         },
          correct: 1,
          isFormValid: false,
          formControls: this.createFormControls()
@@ -200,21 +216,35 @@ export default class Creator extends Component {
    createQuiz = async (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault()
 
-      try {
-         const response = await Axios.post('quiz.json', this.state.quiz)
-         this.setState({ // reset state
-            quiz: {
-               items: []
-            },
-            correct: 1,
-            isFormValid: false,
-            formControls: this.createFormControls()
-         })
-         if (response.statusText === 'OK') {
-            this.props.history.push('/') // go to list
-         }
-      } catch (err) {
-         console.error(err)
+      const response = await this.props.uploadQuiz()
+      
+      this.setState({ // reset state
+         correct: 1,
+         isFormValid: false,
+         formControls: this.createFormControls()
+      })
+      if (response.statusText === 'OK') {
+         this.props.history.push('/') // go to list
       }
    }
 }
+
+type Control = {
+   id?: number
+   label: string
+   value?: string
+   error: string
+   isTouched?: boolean
+   isValid?: boolean
+}
+
+const mapStateToProps = state => ({
+   quiz: state.creator.quiz
+})
+
+const mapDispatchToProps = dispatch => ({
+   updateQuiz: (item: object, name: string) => dispatch(Action.updateQuiz(item, name)),
+   uploadQuiz: () => dispatch(Action.uploadQuiz())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Creator)
