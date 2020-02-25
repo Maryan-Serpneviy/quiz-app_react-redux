@@ -1,125 +1,98 @@
-import React, { Component } from 'react'
-import Axios from '@rest'
+import React, { useEffect } from 'react'
+import PropTypes, { InferProps } from 'prop-types'
+import { connect } from 'react-redux'
+import * as Action from '@s/actions/quiz'
 import Loader from '@com/Loader'
 import LoaderSm from '@com/LoaderSm'
 import ActiveQuiz from '@com/ActiveQuiz'
 import CompletedQuiz from '@com/CompletedQuiz'
 import classes from './Quiz.module.scss'
-import { shuffle } from '@/helpers/shuffle'
 
-export default class Quiz extends Component {
-   state = {
-      current: 0,
-      answerStatus: null,
-      completed: false,
-      results: [],
-      quiz: [],
-      isLoading: true
-   }
+const Quiz: React.FC<Props> = ({
+   isLoading,
+   quiz,
+   current,
+   answerStatus,
+   completed,
+   results,
+   fetchQuiz,
+   onAnswerClick,
+   restartQuiz,
+   ...props
+}: InferProps<typeof Quiz.propTypes>) => {
+   
+   useEffect(() => {
+      fetchQuiz(props.match.params.id)
 
-   render() {
-      const {
-         isLoading,
-         current,
-         quiz,
-         answerStatus,
-         completed,
-         results
-      } = this.state
+      return () => {
+         restartQuiz()
+      }
+   }, [])
 
-      return (
-         <div className={classes.Quiz}>
-            <div className={classes.wrapper}>
-               <h1>Quiz</h1>
+   return (
+      <div className={classes.Quiz}>
+         <div className={classes.wrapper}>
+            <h1>Quiz</h1>
 
-               {isLoading && <LoaderSm />}
+            {isLoading && <LoaderSm />}
 
-               {!isLoading && !completed && <ActiveQuiz
-                  current={current + 1}
-                  total={quiz.length}
-                  question={quiz[current].question}
-                  answers={quiz[current].answers}
-                  onAnswerClick={this.onAnswerClick}
-                  status={answerStatus}
-               />}
+            {!isLoading && !completed && quiz.length && <ActiveQuiz
+               current={current + 1}
+               total={quiz.length}
+               question={quiz[current].question}
+               answers={quiz[current].answers}
+               onAnswerClick={onAnswerClick}
+               status={answerStatus}
+            />}
 
-               {!isLoading && completed && (
-                  <CompletedQuiz
-                     quiz={quiz}
-                     results={results}
-                     restartQuiz={this.restartQuiz}
-               />)}
-            </div>
+            {!isLoading && completed && (
+               <CompletedQuiz
+                  quiz={quiz}
+                  results={results}
+                  restartQuiz={restartQuiz}
+            />)}
          </div>
-      )
-   }
-
-   async componentDidMount() {
-      try {
-         const response = await Axios.get(`quiz/${this.props.match.params.id}.json`)
-         const quiz = shuffle(response.data.items)
-         this.setState({
-            quiz,
-            isLoading: false
-         })
-      } catch (err) {
-         console.error(err)
-      }
-   }
-
-   onAnswerClick = (id: number) => {
-      const { current, quiz, results } = this.state
-
-      this.useDelay()
-
-      // updating results
-      const question = quiz[current]
-      if (question.correct === id) {
-         this.setState({
-            answerStatus: { [id]: 'correct' },
-            results: [...results, 'correct']
-         })
-      } else {
-         this.setState({
-            answerStatus: { [id]: 'incorrect' },
-            results: [...results, 'incorrect']
-         })
-      }
-   }
-
-   useDelay() {
-      const { answerStatus } = this.state
-      const timeout = window.setTimeout(() => {
-         if (this.isQuizCompleted()) {
-            this.setState({ completed: true })
-         } else {
-            if (answerStatus) { // exclude bug if multiple clicks
-               const key = Object.keys(answerStatus)[0]
-               if (answerStatus[key] === 'correct') {
-                  return
-               }
-            } else {
-               this.setState({
-                  current: this.state.current + 1,
-                  answerStatus: null
-               })
-            }
-         }
-         window.clearTimeout(timeout)
-      }, 1000)
-   }
-
-   isQuizCompleted(): boolean {
-      const { current, quiz } = this.state
-      return current + 1 === quiz.length
-   }
-
-   restartQuiz = () => {
-      this.setState({
-         current: 0,
-         answerStatus: null,
-         completed: false,
-         results: []
-      })
-   }
+      </div>
+   )
 }
+
+Quiz.propTypes = {
+   isLoading: PropTypes.bool.isRequired,
+   quiz: PropTypes.array.isRequired,
+   current: PropTypes.number.isRequired,
+   answerStatus: PropTypes.object,
+   completed: PropTypes.bool.isRequired,
+   results: PropTypes.array.isRequired,
+   fetchQuiz: PropTypes.func.isRequired,
+   onAnswerClick: PropTypes.func.isRequired,
+   restartQuiz: PropTypes.func.isRequired
+}
+
+interface Props {
+   isLoading: boolean
+   quiz: object[]
+   current: number
+   answerStatus: null | object
+   completed: boolean
+   results: object[]
+   fetchQuiz: (id: string) => void
+   onAnswerClick: (id: number) => void
+   restartQuiz: () => void
+}
+
+const mapStateToProps = (state): object => ({
+   isLoading: state.quiz.isLoading,
+   quiz: state.quiz.quiz,
+   current: state.quiz.current,
+   answerStatus: state.quiz.answerStatus,
+   completed: state.quiz.completed,
+   results: state.quiz.results
+})
+
+const mapDispatchToProps = (dispatch): object => ({
+   fetchQuiz: (id: string) => dispatch(Action.fetchQuiz(id)),
+   onAnswerClick: (id: number) => dispatch(Action.onAnswerClick(id)),
+   restartQuiz: () => dispatch(Action.restartQuiz())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Quiz)
