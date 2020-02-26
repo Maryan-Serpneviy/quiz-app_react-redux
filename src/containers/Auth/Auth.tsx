@@ -64,6 +64,8 @@ class Auth extends Component {
       )
    }
 
+   input = React.createRef()
+
    renderInputs() {
       const { formControls } = this.state
 
@@ -83,6 +85,7 @@ class Auth extends Component {
                   this.handleChange(event.target.value, controlName)
                }}
                onKeyPress={this.handleEnterKey}
+               autofocus={controlName === 'email'}
             />
          )
       })

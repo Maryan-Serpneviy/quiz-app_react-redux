@@ -94,7 +94,7 @@ class Creator extends React.Component<Props, State> {
    renderInputs() {
       const { formControls } = this.state
       
-      return Object.keys(formControls).map((controlName, index) => {
+      return Object.keys(formControls).map((controlName: string, index) => {
          const control = formControls[controlName]
 
          return (
@@ -109,6 +109,7 @@ class Creator extends React.Component<Props, State> {
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                      this.handleChange(event.target.value, controlName)
                   }}
+                  autofocus={controlName === 'question'}
                />
                {index === 0 && <hr/>}
             </React.Fragment>
