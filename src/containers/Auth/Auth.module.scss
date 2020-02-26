@@ -29,4 +29,9 @@
       padding: 15px;
       border-radius: 5px;
    }
+
+   .invalid {
+      color: $danger-color;
+      font-weight: bold;
+   }
 }

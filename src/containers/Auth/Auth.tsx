@@ -10,7 +10,8 @@ import classes from './Auth.module.scss'
 class Auth extends Component {
    state = {
       formControls: this.createFormControls(),
-      isFormValid: false
+      isFormValid: false,
+      isLoginInvalid: false
    }
 
    render() {
@@ -33,6 +34,9 @@ class Auth extends Component {
                      onClick={this.registrationHandler}
                      disabled={!this.state.isFormValid}
                   >Register</Button>
+
+                  {this.state.isLoginInvalid &&
+                  <span className={classes.invalid}>Incorrect email or password</span>}
                </form>
             </div>
          </div>
@@ -74,6 +78,7 @@ class Auth extends Component {
 
       this.setState({
          formControls,
+         isLoginInvalid: false,
          isFormValid: Formic.validateForm(formControls)
       })
    }
@@ -104,9 +109,13 @@ class Auth extends Component {
          email: this.state.formControls.email.value,
          password: this.state.formControls.password.value
       }
-      const response = await this.props.authUser(authData, AuthConst.SIGN_IN)
-      if (response.status === 200) {
-         console.log(response)
+      try {
+         const response = await this.props.authUser(authData, AuthConst.SIGN_IN)
+         if (response.status === 200) {
+            //
+         }
+      } catch (err) {
+         this.setState({ isLoginInvalid: true })
       }
    }
 
@@ -115,9 +124,13 @@ class Auth extends Component {
          email: this.state.formControls.email.value,
          password: this.state.formControls.password.value
       }
-      const response = await this.props.authUser(authData, AuthConst.SIGN_UP)
-      if (response.status === 200) {
-         console.log(response)
+      try {
+         const response = await this.props.authUser(authData, AuthConst.SIGN_UP)
+         if (response.status === 200) {
+            //
+         }
+      } catch (err) {
+         console.error(err)
       }
    }
 }

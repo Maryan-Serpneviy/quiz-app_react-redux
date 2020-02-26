@@ -8,30 +8,26 @@ export const authUser = (authData: {
    password: string
 }, authAction: string) => async(dispatch: any): Promise<object> => {
 
-   try {
-      const response = await Axios.post(
-         `https://identitytoolkit.googleapis.com/v1/accounts:${authAction}?key=AIzaSyBiPy_ZxHNmvqoORd_czjiS4dchO8TZR20`,
-         {
-            ...authData,
-            returnSecureToken: true
-         }
-      )
-
-      if (response.status === 200) {
-         const { idToken, localId, expiresIn } = response.data
-         const prefix = AuthConst.APP_PREFIX
-         const expires = String(new Date(new Date().getTime() + Number(expiresIn) * 1000))
-         
-         localStorage.setItem(`${prefix}IdToken`, idToken)
-         localStorage.setItem(`${prefix}userId`, localId)
-         localStorage.setItem(`${prefix}expires`, expires)
-
-         dispatch(authSuccess(idToken))
-         dispatch(autoLogout(Number(expiresIn)))
-         return response
+   const response = await Axios.post(
+      `https://identitytoolkit.googleapis.com/v1/accounts:${authAction}?key=AIzaSyBiPy_ZxHNmvqoORd_czjiS4dchO8TZR20`,
+      {
+         ...authData,
+         returnSecureToken: true
       }
-   } catch (err) {
-      console.error(err)
+   )
+
+   if (response.status === 200) {
+      const { idToken, localId, expiresIn } = response.data
+      const prefix = AuthConst.APP_PREFIX
+      const expires = String(new Date(new Date().getTime() + Number(expiresIn) * 1000))
+      
+      localStorage.setItem(`${prefix}IdToken`, idToken)
+      localStorage.setItem(`${prefix}userId`, localId)
+      localStorage.setItem(`${prefix}expires`, expires)
+
+      dispatch(authSuccess(idToken))
+      dispatch(autoLogout(Number(expiresIn)))
+      return response
    }
 }
 
