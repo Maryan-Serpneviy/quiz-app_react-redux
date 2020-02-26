@@ -20,7 +20,7 @@ interface Action extends State {
    item: object
 }
 
-export default function creatorReducer(state: State = initialState, action: Action): object {
+export default function creatorReducer(state: State = initialState, action: Action): State {
    switch (action.type) {
       case Actions.UPDATE_QUIZ:
          return {

@@ -28,7 +28,7 @@ interface Action extends State {
    type: string
 }
 
-export default function quizReducer(state: object = initialState, action: Action): object {
+export default function quizReducer(state: State = initialState, action: Action): State {
    switch (action.type) {
       case Actions.FETCH_START:
          return {

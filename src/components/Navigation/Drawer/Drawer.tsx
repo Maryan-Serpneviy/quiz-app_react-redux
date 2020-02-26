@@ -4,13 +4,13 @@ import PropTypes, { InferProps } from 'prop-types'
 import BackDrop from '@com/Navigation/BackDrop'
 import classes from './Drawer.module.scss'
 
-const links = [
-   { to: '/', label: 'Quiz list', exact: true },
-   { to: '/auth', label: 'Authorize', exact: false },
-   { to: '/creator', label: 'Create quiz', exact: false }
-]
-
 const Drawer: React.FC<Props> = ({ isOpen, hideMenu }: InferProps<typeof Drawer.propTypes>) => {
+   const links = [
+      { to: '/', label: 'Quiz List', exact: true },
+      { to: '/creator', label: 'Quiz Creator', exact: false },
+      { to: '/auth', label: 'Authorization', exact: false }
+   ]
+
    const renderLinks = () => {
       return links.map((link, index) => (
          <li key={index}>

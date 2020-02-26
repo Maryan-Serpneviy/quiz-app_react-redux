@@ -205,27 +205,25 @@ class Creator extends React.Component<Props, State> {
       }
 
       this.props.updateQuiz(questionItem, name.value)
-
-      this.setState({
-         correct: 1,
-         isFormValid: false,
-         formControls: this.createFormControls()
-      })
+      this.resetState()
    }
 
    createQuiz = async (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault()
 
       const response = await this.props.uploadQuiz()
-      
-      this.setState({ // reset state
+      if (response.statusText === 'OK') {
+         this.resetState()
+         this.props.history.push('/') // go to list
+      }
+   }
+
+   resetState() {
+      this.setState({
          correct: 1,
          isFormValid: false,
          formControls: this.createFormControls()
       })
-      if (response.statusText === 'OK') {
-         this.props.history.push('/') // go to list
-      }
    }
 }
 
