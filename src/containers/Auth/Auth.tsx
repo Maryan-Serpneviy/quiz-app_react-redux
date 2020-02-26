@@ -14,6 +14,27 @@ class Auth extends Component {
       isLoginInvalid: false
    }
 
+   createFormControls(): object {
+      return {
+         email: Formic.createControl({
+            type: 'email',
+            label: 'Email',
+            error: 'Email is invalid'
+         }, {
+            required: true,
+            email: true
+         }),
+         password: Formic.createControl({
+            type: 'password',
+            label: 'Password',
+            error: 'Password is invalid'
+         }, {
+            required: true,
+            minLength: 6
+         })
+      }
+   }
+
    render() {
       return (
          <div className={classes.auth}>
@@ -58,9 +79,10 @@ class Auth extends Component {
                isTouched={control.isTouched}
                isValid={control.isValid}
                shouldValidate={!!control.validation}
-               handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   this.handleChange(event.target.value, controlName)
                }}
+               onKeyPress={this.handleEnterKey}
             />
          )
       })
@@ -83,24 +105,9 @@ class Auth extends Component {
       })
    }
 
-   createFormControls(): object {
-      return {
-         email: Formic.createControl({
-            type: 'email',
-            label: 'Email',
-            error: 'Email is invalid'
-         }, {
-            required: true,
-            email: true
-         }),
-         password: Formic.createControl({
-            type: 'password',
-            label: 'Password',
-            error: 'Password is invalid'
-         }, {
-            required: true,
-            minLength: 6
-         })
+   handleEnterKey = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+         this.loginHandler()
       }
    }
 

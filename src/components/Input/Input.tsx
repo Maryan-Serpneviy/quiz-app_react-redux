@@ -10,7 +10,10 @@ const Input: React.FC<Props> = ({
    isTouched,
    isValid,
    shouldValidate,
-   handleChange
+   onChange,
+   onKeyDown,
+   onKeyUp,
+   onKeyPress
 }: InferProps<typeof Input.propTypes>) => {
 
    const inputType = type || 'text'
@@ -32,7 +35,10 @@ const Input: React.FC<Props> = ({
             type={inputType}
             id={htmlFor}
             value={value}
-            onChange={handleChange}
+            onChange={onChange}
+            onKeyDown={onKeyDown ? onKeyDown : null}
+            onKeyUp={onKeyUp ? onKeyUp : null}
+            onKeyPress={onKeyPress ? onKeyPress : null}
          />
          {isInvalid() && <span>{error || 'Value is incorrect'}</span>}
       </div>
@@ -47,7 +53,10 @@ Input.propTypes = {
    isTouched: PropTypes.bool.isRequired,
    isValid: PropTypes.bool.isRequired,
    shouldValidate: PropTypes.bool.isRequired,
-   handleChange: PropTypes.func.isRequired
+   onChange: PropTypes.func.isRequired,
+   onKeyDown: PropTypes.func,
+   onKeyUp: PropTypes.func,
+   onKeyPress: PropTypes.func
 }
 
 type Props = {
@@ -58,7 +67,10 @@ type Props = {
    isTouched: boolean
    isValid: boolean
    shouldValidate: boolean
-   handleChange: () => void
+   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
+   onKeyUp?: (event: React.KeyboardEvent<HTMLInputElement>) => void
+   onKeyPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void
 }
 
 export default Input

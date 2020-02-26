@@ -106,7 +106,7 @@ class Creator extends React.Component<Props, State> {
                   isTouched={control.isTouched}
                   isValid={control.isValid}
                   shouldValidate={!!control.validation}
-                  handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                      this.handleChange(event.target.value, controlName)
                   }}
                />
