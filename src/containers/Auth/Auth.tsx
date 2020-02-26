@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
-import Axios from 'axios'
+import { connect } from 'react-redux'
+import { authUser } from '@s/actions/auth'
+import { AuthConst } from '@/constants'
 import Formic from '@lib/formic'
 import Input from '@com/Input'
 import Button from '@com/Button'
 import classes from './Auth.module.scss'
 
-export default class Auth extends Component {
+class Auth extends Component {
    state = {
       formControls: this.createFormControls(),
       isFormValid: false
@@ -97,37 +99,34 @@ export default class Auth extends Component {
       }
    }
 
-   loginHandler = async () => {
+   loginHandler = async() => {
       const authData = {
          email: this.state.formControls.email.value,
-         password: this.state.formControls.password.value,
-         returnSecureToken: true
+         password: this.state.formControls.password.value
       }
-      try {
-         const response = await Axios.post(
-            'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBiPy_ZxHNmvqoORd_czjiS4dchO8TZR20',
-            authData
-         )
-         console.log(response.data)
-      } catch (err) {
-         console.error(err)
+      const response = await this.props.authUser(authData, AuthConst.SIGN_IN)
+      if (response.status === 200) {
+         console.log(response)
       }
    }
 
-   registrationHandler = async () => {
+   registrationHandler = async() => {
       const authData = {
          email: this.state.formControls.email.value,
-         password: this.state.formControls.password.value,
-         returnSecureToken: true
+         password: this.state.formControls.password.value
       }
-      try {
-         const response = await Axios.post(
-            'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBiPy_ZxHNmvqoORd_czjiS4dchO8TZR20',
-            authData
-         )
-         console.log(response.data)
-      } catch (err) {
-         console.error(err)
+      const response = await this.props.authUser(authData, AuthConst.SIGN_UP)
+      if (response.status === 200) {
+         console.log(response)
       }
    }
 }
+
+const mmapDispatchToProps = (dispatch: authUser) => ({
+   authUser: (authData: {
+      email: string,
+      password: string
+   }, authAction: string) => dispatch(authUser(authData, authAction))
+})
+
+export default connect(null, mmapDispatchToProps)(Auth)
