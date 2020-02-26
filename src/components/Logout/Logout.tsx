@@ -9,7 +9,7 @@ type Logout = {
 }
 
 // eslint-disable-next-line no-shadow
-const Logout: React.FC<Logout> = ({ logOut }: InferProps<typeof Logout.PropTypes>) => {
+const Logout: React.FC<Logout> = ({ logOut }: InferProps<typeof Logout.propTypes>) => {
    useEffect(() => {
       logOut()
    }, [])
