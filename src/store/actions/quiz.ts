@@ -2,6 +2,7 @@
 import Axios from '@rest'
 import Types from './actionTypes'
 import { shuffle } from '@/helpers/shuffle'
+import { QUESTION_DELAY } from '@/constants'
 
 const fetchStart = () => ({
    type: Types.FETCH_START
@@ -22,36 +23,45 @@ const fetchError = (err: object) => ({
    error: err
 })
 
-export const fetchQuizes = () => async(dispatch) => {
+export const fetchQuizes = () => async(dispatch: any): Promise<object> => {
    dispatch(fetchStart())
    try {
       const response = await Axios.get('quiz.json')
-      const quizList = Object.entries(response.data).map(entry => {
-         const [id, data] = entry
-         return {
-            id,
-            name: data.name
-         }
-      })
-      dispatch(fetchQuizListSuccess(quizList))
+
+      if (response.status === 200) {
+         const quizList = Object.entries(response.data).map(entry => {
+            const [id, data] = entry
+            return {
+               id,
+               name: data.name
+            }
+         })
+   
+         dispatch(fetchQuizListSuccess(quizList))
+         return response
+      }
    } catch (err) {
       dispatch(fetchError(err))
    }
 }
 
-export const fetchQuiz = (id: string) => async(dispatch) => {
+export const fetchQuiz = (id: string) => async(dispatch: any): Promise<object> => {
    dispatch(fetchStart())
    try {
       const response = await Axios.get(`quiz/${id}.json`)
-      const quiz = shuffle(response.data.items)
+
+      if (response.status === 200) {
+         const quiz = shuffle(response.data.items)
       
-      dispatch(fetchQuizSuccess(quiz))
+         dispatch(fetchQuizSuccess(quiz))
+         return response
+      }
    } catch (err) {
       console.error(err)
    }
 }
 
-export const onAnswerClick = (id: number) => (dispatch, getState) => {
+export const onAnswerClick = (id: number) => (dispatch, getState): void => {
    const state = getState().quiz
 
    const timeout = window.setTimeout(() => {
@@ -68,7 +78,7 @@ export const onAnswerClick = (id: number) => (dispatch, getState) => {
          }
       }
       window.clearTimeout(timeout)
-   }, 750)
+   }, QUESTION_DELAY)
 
    // updating results
    const question = state.quiz[state.current]

@@ -11,7 +11,7 @@ const resetCreator = () => ({
    type: Types.RESET_CREATOR
 })
 
-export const uploadQuiz = () => async(dispatch, getState): object => {
+export const uploadQuiz = () => async(dispatch, getState): Promise<object> => {
    try {
       const response = await Axios.post('quiz.json', getState().creator.quiz)
       if (response.statusText === 'OK') {
