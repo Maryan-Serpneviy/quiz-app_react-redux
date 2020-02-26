@@ -5,13 +5,15 @@ import { AuthConst } from '@/constants'
 
 export const authUser = (authData: {
    email: string,
-   password: string
-}, authAction: string) => async(dispatch: any): Promise<object> => {
+   password: string,
+   action: string
+}) => async(dispatch: any): Promise<object> => {
 
    const response = await Axios.post(
-      `https://identitytoolkit.googleapis.com/v1/accounts:${authAction}?key=AIzaSyBiPy_ZxHNmvqoORd_czjiS4dchO8TZR20`,
+      `https://identitytoolkit.googleapis.com/v1/accounts:${authData.action}?key=AIzaSyBiPy_ZxHNmvqoORd_czjiS4dchO8TZR20`,
       {
-         ...authData,
+         email: authData.email,
+         password: authData.password,
          returnSecureToken: true
       }
    )

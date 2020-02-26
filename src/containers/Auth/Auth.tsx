@@ -117,10 +117,11 @@ class Auth extends Component {
    loginHandler = async() => {
       const authData = {
          email: this.state.formControls.email.value,
-         password: this.state.formControls.password.value
+         password: this.state.formControls.password.value,
+         action: AuthConst.SIGN_IN
       }
       try {
-         const response = await this.props.authUser(authData, AuthConst.SIGN_IN)
+         const response = await this.props.authUser(authData)
          if (response.status === 200) {
             //
          }
@@ -132,10 +133,11 @@ class Auth extends Component {
    registrationHandler = async() => {
       const authData = {
          email: this.state.formControls.email.value,
-         password: this.state.formControls.password.value
+         password: this.state.formControls.password.value,
+         action: AuthConst.SIGN_UP
       }
       try {
-         const response = await this.props.authUser(authData, AuthConst.SIGN_UP)
+         const response = await this.props.authUser(authData)
          if (response.status === 200) {
             //
          }
@@ -148,8 +150,9 @@ class Auth extends Component {
 const mmapDispatchToProps = (dispatch: authUser) => ({
    authUser: (authData: {
       email: string,
-      password: string
-   }, authAction: string) => dispatch(authUser(authData, authAction))
+      password: string,
+      action: string
+   }) => dispatch(authUser(authData))
 })
 
 export default connect(null, mmapDispatchToProps)(Auth)
