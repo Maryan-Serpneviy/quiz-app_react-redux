@@ -4,12 +4,26 @@ import PropTypes, { InferProps } from 'prop-types'
 import BackDrop from '@com/Navigation/BackDrop'
 import classes from './Drawer.module.scss'
 
-const Drawer: React.FC<Props> = ({ isOpen, hideMenu }: InferProps<typeof Drawer.propTypes>) => {
+type Props = {
+   isAuthorized?: boolean
+   isOpen: boolean
+   hideMenu: () => void
+}
+
+const Drawer: React.FC<Props> = ({
+   isAuthorized, isOpen, hideMenu
+}: InferProps<typeof Drawer.propTypes>) => {
+
    const links = [
-      { to: '/', label: 'Quiz List', exact: true },
-      { to: '/creator', label: 'Quiz Creator', exact: false },
-      { to: '/auth', label: 'Authorization', exact: false }
+      { to: '/', label: 'Quiz List', exact: true }
    ]
+
+   if (isAuthorized) {
+      links.push({ to: '/creator', label: 'Quiz Creator', exact: false })
+      links.push({ to: '/logout', label: 'Log out', exact: false })
+   } else {
+      links.push({ to: '/auth', label: 'Authorize', exact: false })
+   }
 
    const renderLinks = () => {
       return links.map((link, index) => (
@@ -44,13 +58,9 @@ const Drawer: React.FC<Props> = ({ isOpen, hideMenu }: InferProps<typeof Drawer.
 }
 
 Drawer.propTypes = {
+   isAuthorized: PropTypes.bool,
    isOpen: PropTypes.bool.isRequired,
    hideMenu: PropTypes.func.isRequired
-}
-
-type Props = {
-   isOpen: boolean
-   hideMenu: () => void
 }
 
 export default Drawer

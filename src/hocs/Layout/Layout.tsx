@@ -1,13 +1,23 @@
 import React, { useState } from 'react'
+import PropTypes, { InferProps } from 'prop-types'
+import { connect } from 'react-redux'
 import MenuToggle from '@com/Navigation/MenuToggle'
 import Drawer from '@com/Navigation/Drawer'
 import classes from './Layout.module.scss'
 
-const Layout: React.FC = ({ children }) => {
+type Props = {
+   isAuthorized?: boolean
+   token?: string
+   children: JSX.Element[] | JSX.Element
+}
+
+const Layout: React.FC<Props> = ({
+   isAuthorized, children
+}: InferProps<typeof Layout.propTypes>) => {
+
    const [menuOpen, setMenuOpen] = useState(false)
 
    const toggleMenu = () => setMenuOpen(!menuOpen)
-
    const hideMenu = () => setMenuOpen(false)
 
    return (
@@ -15,6 +25,7 @@ const Layout: React.FC = ({ children }) => {
          <Drawer
             isOpen={menuOpen}
             hideMenu={hideMenu}
+            isAuthorized={isAuthorized}
          />
 
          <MenuToggle
@@ -29,4 +40,12 @@ const Layout: React.FC = ({ children }) => {
    )
 }
 
-export default Layout
+Layout.propTypes = {
+   isAuthorized: PropTypes.bool
+}
+
+const mapStateToProps = (state: { auth: Props }) => ({
+   isAuthorized: !!state.auth.token
+})
+
+export default connect(mapStateToProps)(Layout)

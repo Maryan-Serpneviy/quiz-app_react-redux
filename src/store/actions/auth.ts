@@ -38,11 +38,11 @@ const authSuccess = (token: string) => ({
 
 const autoLogout = (time: number) => (dispatch) => {
    setTimeout(() => {
-      dispatch(signOut())
+      dispatch(logOut())
    }, time * 1000)
 }
 
-const signOut = () => {
+export const logOut = () => {
    const prefix = AuthConst.APP_PREFIX
    localStorage.removeItem(`${prefix}IdToken`)
    localStorage.removeItem(`${prefix}userId`)
@@ -50,5 +50,22 @@ const signOut = () => {
    
    return {
       type: Types.AUTH_SIGN_OUT
+   }
+}
+
+export const autoLogin = () => (dispatch) => {
+   const prefix = AuthConst.APP_PREFIX
+   const token = localStorage.getItem(`${prefix}IdToken`)
+
+   if (!token) {
+      dispatch(logOut())
+   } else {
+      const expires = new Date(localStorage.getItem(`${prefix}expires`))
+      if (expires <= new Date()) {
+         dispatch(logOut())
+      } else {
+         dispatch(authSuccess(token))
+         dispatch(autoLogout((Number(expires.getTime()) - new Date().getTime()) / 1000))
+      }
    }
 }
