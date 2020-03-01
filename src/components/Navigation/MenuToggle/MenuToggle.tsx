@@ -2,6 +2,11 @@ import React from 'react'
 import PropTypes, { InferProps } from 'prop-types'
 import classes from './MenuToggle.module.scss'
 
+type Props = {
+   toggleMenu: () => void
+   isOpen: boolean
+}
+
 const MenuToggle: React.FC<Props> = ({ toggleMenu, isOpen }: InferProps<typeof MenuToggle.propTypes>) => {
    let style = [
       classes.MenuToggle,
@@ -23,11 +28,6 @@ const MenuToggle: React.FC<Props> = ({ toggleMenu, isOpen }: InferProps<typeof M
 MenuToggle.propTypes = {
    toggleMenu: PropTypes.func.isRequired,
    isOpen: PropTypes.bool.isRequired
-}
-
-type Props = {
-   toggleMenu: () => void
-   isOpen: boolean
 }
 
 export default MenuToggle

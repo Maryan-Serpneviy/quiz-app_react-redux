@@ -2,8 +2,17 @@ import React from 'react'
 import PropTypes, { InferProps } from 'prop-types'
 import classes from './Button.module.scss'
 
-const Button: React.FC<Props> = (props: InferProps<typeof Button.propTypes>) => {
-   const { onClick, disabled, children } = props
+type Props = {
+   type?: string
+   disabled?: boolean
+   onClick: () => void
+   children: JSX.Element[] | JSX.Element
+}
+
+const Button: React.FC<Props> = (
+   { onClick, disabled, children, ...props } :
+   InferProps<typeof Button.propTypes>) => {
+
    const style = [
       classes.button,
       classes[props.type]
@@ -21,14 +30,9 @@ const Button: React.FC<Props> = (props: InferProps<typeof Button.propTypes>) => 
 }
 
 Button.propTypes = {
-   onClick: PropTypes.func.isRequired,
-   disabled: PropTypes.bool
-}
-
-type Props = {
-   onClick: () => void
-   disabled: boolean
-   children: JSX.Element[] | JSX.Element
+   type: PropTypes.string,
+   disabled: PropTypes.bool,
+   onClick: PropTypes.func.isRequired
 }
 
 export default Button

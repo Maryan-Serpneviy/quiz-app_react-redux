@@ -4,9 +4,15 @@ import { useHistory } from 'react-router-dom'
 import Button from '@com/Button'
 import classes from './CompletedQuiz.module.scss'
 
-const CompletedQuiz: React.FC<Props> = ({
-   quiz, results, restartQuiz
-}: InferProps<typeof CompletedQuiz.propTypes>) => {
+type Props = {
+   quiz: object[]
+   results: string[]
+   restartQuiz: () => void
+}
+
+const CompletedQuiz: React.FC<Props> = (
+   { quiz, results, restartQuiz } :
+   InferProps<typeof CompletedQuiz.propTypes>) => {
    
    const history = useHistory()
 
@@ -17,7 +23,7 @@ const CompletedQuiz: React.FC<Props> = ({
    return (
       <div className={classes.CompletedQuiz}>
          <ul>
-            {quiz.map((item, index) => (
+            {quiz.map((item: { question: string }, index) => (
                <li key={index}>
                   <strong>{index + 1}. </strong>
                   {item.question}
@@ -46,12 +52,6 @@ CompletedQuiz.propTypes = {
    quiz: PropTypes.array.isRequired,
    results: PropTypes.array.isRequired,
    restartQuiz: PropTypes.func
-}
-
-type Props = {
-   quiz: object[]
-   results: string[]
-   restartQuiz: () => void
 }
 
 export default CompletedQuiz

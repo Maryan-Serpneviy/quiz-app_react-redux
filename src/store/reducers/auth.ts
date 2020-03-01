@@ -1,18 +1,12 @@
 import Actions from '../actions/actionTypes'
+import { ActionsTypes } from '../actions/auth'
 
-const initialState: State = {
-   token: null
+const initialState = {
+   token: null as string | null
 }
+export type StateType = typeof initialState
 
-interface State {
-   token: null | string
-}
-
-interface Action extends State {
-   type: string
-}
-
-export default function authReducer(state: State = initialState, action: Action): State {
+export default function authReducer(state = initialState, action: ActionsTypes): StateType {
    switch (action.type) {
       case Actions.AUTH_SUCCESS:
          return {

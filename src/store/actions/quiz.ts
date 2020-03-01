@@ -1,115 +1,147 @@
 /* eslint-disable no-use-before-define */
 import Axios from '@rest'
 import Types from './actionTypes'
+import { Dispatch } from 'redux'
+import { ThunkAction } from 'redux-thunk'
+import { StateType } from '../reducers/quiz'
 import { shuffle } from '@/helpers/shuffle'
 import { QUESTION_DELAY } from '@/constants'
 
-const fetchStart = () => ({
+type ThunkTypeVoid = ThunkAction<Promise<void>, StateType, undefined, ActionsTypes>
+type ThunkTypeObj = ThunkAction<Promise<object>, StateType, undefined, ActionsTypes>
+
+type FetchStartType = { type: typeof Types.FETCH_START }
+const fetchStart = (): FetchStartType => ({
    type: Types.FETCH_START
 })
 
-const fetchQuizListSuccess = (quizList: object[]) => ({
+type FetchQuizListSuccessType = {
+   type: typeof Types.FETCH_QUIZ_LIST_SUCCESS, quizList: object[] }
+const fetchQuizListSuccess = (quizList: object[]): FetchQuizListSuccessType => ({
    type: Types.FETCH_QUIZ_LIST_SUCCESS,
    quizList
 })
 
-const fetchQuizSuccess = (quiz: object) => ({
+type FetchQuizSuccessType = {
+   type: typeof Types.FETCH_QUIZ_SUCCESS, quiz: [] | object[] }
+const fetchQuizSuccess = (quiz: [] | object[]): FetchQuizSuccessType => ({
    type: Types.FETCH_QUIZ_SUCCESS,
    quiz
 })
 
-const fetchError = (err: object) => ({
+type FetchErrorType = {
+   type: typeof Types.FETCH_ERROR, error: object }
+const fetchError = (err: object): FetchErrorType => ({
    type: Types.FETCH_ERROR,
    error: err
 })
 
-export const fetchQuizes = () => async(dispatch: any): Promise<object> => {
-   dispatch(fetchStart())
-   try {
-      const response = await Axios.get('quiz.json')
-
-      if (response.status === 200) {
-         const quizList = Object.entries(response.data).map(entry => {
-            const [id, data] = entry
-            return {
-               id,
-               name: data.name
-            }
-         })
+export const fetchQuizes = (): ThunkTypeObj => {
+   return async (dispatch: Dispatch<ActionsTypes>): Promise<object> => {
+      dispatch(fetchStart())
+      try {
+         const response = await Axios.get('quiz.json')
    
-         dispatch(fetchQuizListSuccess(quizList))
-         return response
-      }
-   } catch (err) {
-      dispatch(fetchError(err))
-   }
-}
-
-export const fetchQuiz = (id: string) => async(dispatch: any): Promise<object> => {
-   dispatch(fetchStart())
-   try {
-      const response = await Axios.get(`quiz/${id}.json`)
-
-      if (response.status === 200) {
-         const quiz = shuffle(response.data.items)
+         if (response.status === 200) {
+            const quizList = Object.entries(response.data).map(entry => {
+               const [id, data] = entry
+               return {
+                  id,
+                  name: data.name
+               }
+            })
       
-         dispatch(fetchQuizSuccess(quiz))
-         return response
-      }
-   } catch (err) {
-      console.error(err)
-   }
-}
-
-export const onAnswerClick = (id: number) => (dispatch, getState): void => {
-   const state = getState().quiz
-
-   const timeout = window.setTimeout(() => {
-      if (state.current + 1 === state.quiz.length) { // if quiz completed
-         dispatch(showResults())
-      } else {
-         if (state.answerStatus) { // exclude bug if multiple clicks
-            const key = Object.keys(state.answerStatus)[0]
-            if (state.answerStatus[key] === 'correct') {
-               return
-            }
-         } else {
-            dispatch(gotoNextQuestion(state.current + 1))
+            dispatch(fetchQuizListSuccess(quizList))
+            return response
          }
+      } catch (err) {
+         dispatch(fetchError(err))
       }
-      window.clearTimeout(timeout)
-   }, QUESTION_DELAY)
-
-   // updating results
-   const question = state.quiz[state.current]
-   if (question.correct === id) {
-      dispatch(updateResults(
-         { [id]: 'correct' },
-         [...state.results, 'correct']
-      ))
-   } else {
-      dispatch(updateResults(
-         { [id]: 'incorrect' },
-         [...state.results, 'incorrect']
-      ))
    }
 }
 
-const updateResults = (answerStatus: object, results: any[]) => ({
+export const fetchQuiz = (id: string): ThunkTypeObj => {
+   return async (dispatch: Dispatch<ActionsTypes>): Promise<object> => {
+      dispatch(fetchStart())
+      try {
+         const response = await Axios.get(`quiz/${id}.json`)
+   
+         if (response.status === 200) {
+            const quiz = shuffle(response.data.items)
+         
+            dispatch(fetchQuizSuccess(quiz))
+            return response
+         }
+      } catch (err) {
+         console.error(err)
+      }
+   }
+}
+
+export const onAnswerClick = (id: number): ThunkTypeVoid => {
+   return async (dispatch: Dispatch<ActionsTypes>, getState): Promise<void> => {
+      const state = getState().quiz
+   
+      const timeout = window.setTimeout(() => {
+         if (state.current + 1 === state.quiz.length) { // if quiz completed
+            dispatch(showResults())
+         } else {
+            if (state.answerStatus) { // exclude bug if multiple clicks
+               const key = Object.keys(state.answerStatus)[0]
+               if (state.answerStatus[key] === 'correct') {
+                  return
+               }
+            } else {
+               dispatch(gotoNextQuestion(state.current + 1))
+            }
+         }
+         window.clearTimeout(timeout)
+      }, QUESTION_DELAY)
+   
+      // updating results
+      const question = state.quiz[state.current]
+      if (question.correct === id) {
+         dispatch(updateResults(
+            { [id]: 'correct' },
+            [...state.results, 'correct']
+         ))
+      } else {
+         dispatch(updateResults(
+            { [id]: 'incorrect' },
+            [...state.results, 'incorrect']
+         ))
+      }
+   }
+}
+
+type UpdateResultsType = {
+   type: typeof Types.UPDATE_RESULTS,
+   answerStatus: null | object,
+   results: object[] }
+const updateResults = (answerStatus: object | null, results: object[]): UpdateResultsType => ({
    type: Types.UPDATE_RESULTS,
    answerStatus,
    results
 })
 
-const gotoNextQuestion = (current: number) => ({
+type GotoNextQuestionType = {
+   type: typeof Types.GOTO_NEXT_QUESTION,
+   current: number }
+const gotoNextQuestion = (current: number): GotoNextQuestionType => ({
    type: Types.GOTO_NEXT_QUESTION,
    current
 })
 
-const showResults = () => ({
+type ShowResultsType = { type: typeof Types.SHOW_RESULTS }
+const showResults = (): ShowResultsType => ({
    type: Types.SHOW_RESULTS
 })
 
-export const restartQuiz = () => ({
+type RestartQuizType = { type: typeof Types.RESTART_QUIZ }
+export const restartQuiz = (): RestartQuizType => ({
    type: Types.RESTART_QUIZ
 })
+
+export type ActionsTypes = FetchStartType | FetchQuizListSuccessType | FetchQuizSuccessType |
+                          FetchErrorType | ShowResultsType | UpdateResultsType | RestartQuizType |
+                          GotoNextQuestionType

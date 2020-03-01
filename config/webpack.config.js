@@ -18,6 +18,7 @@ const Path = {
 	hocs: path.join(__dirname, '../src/hocs'),
 	libraries: path.join(__dirname, '../src/lib'),
 	ui: path.join(__dirname, '../src/UI'),
+	utils: path.join(__dirname, '../src/utils'),
 	images: path.join(__dirname, '../src/assets/images')
 }
 const alias = '@'
@@ -143,6 +144,7 @@ module.exports = {
 			[`${alias}hoc`]: path.resolve(__dirname, Path.hocs),
 			[`${alias}lib`]: path.resolve(__dirname, Path.libraries),
 			[`${alias}ui`]: path.resolve(__dirname, Path.ui),
+			[`${alias}utils`]: path.resolve(__dirname, Path.utils),
 			[`${alias}img`]: path.resolve(__dirname, Path.images)
 		},
 		extensions: ['*', 'css', 'scss', '.js', '.jsx', '.ts', '.tsx', '.json']

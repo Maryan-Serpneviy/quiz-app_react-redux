@@ -6,7 +6,7 @@ type Validation = {
 }
 
 class Formic {
-   createControl(config: object, validation: object): object {
+   createControl(config: ControlType, validation: Validation): ControlType {
       return {
          isTouched: false,
          isValid: !validation,
@@ -67,6 +67,16 @@ class Formic {
       }
       return controlsCount !== values.size
    }
+}
+
+export type ControlType = {
+   type: string
+   label: string
+   value?: string
+   error: string
+   isTouched?: boolean
+   isValid?: boolean
+   validation: object
 }
 
 export default new Formic()

@@ -5,15 +5,18 @@ import classes from './ActiveQuiz.module.scss'
 import { shuffle } from '@/helpers/shuffle'
 const clone = require('rfdc')()
 
-const ActiveQuiz: React.FC<Props> = (props: InferProps<typeof ActiveQuiz.propTypes>) => {
-   const {
-      current,
-      total,
-      question,
-      answers,
-      status,
-      onAnswerClick
-   } = props
+type Props = {
+   current: number
+   total?: number
+   question: string
+   answers: object[]
+   status: null | object
+   onAnswerClick: (id: number) => void
+}
+
+const ActiveQuiz: React.FC<Props> = (
+   { current, total, question, answers, status, onAnswerClick } :
+   InferProps<typeof ActiveQuiz.propTypes>) => {
 
    let cached = useRef(null) // persist once shuffled answers between renders
 
@@ -60,15 +63,6 @@ ActiveQuiz.propTypes = {
    answers: PropTypes.array.isRequired,
    onAnswerClick: PropTypes.func.isRequired,
    status: PropTypes.object
-}
-
-type Props = {
-   current: number
-   total?: number
-   question: string
-   answers: object[]
-   status: object
-   onAnswerClick: (id: number) => void
 }
 
 export default ActiveQuiz

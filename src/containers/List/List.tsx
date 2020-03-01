@@ -3,14 +3,19 @@ import PropTypes, { InferProps } from 'prop-types'
 import { Link, NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { fetchQuizes } from '@s/actions/quiz'
-import Loader from '@com/Loader'
 import LoaderSm from '@com/LoaderSm'
 import classes from './List.module.scss'
 
-const List: React.FC<Props> = ({
+type Props = {
+   isLoading: boolean
+   quizList: object[]
+   fetchQuizes: () => Promise<object>
+}
+
+const List: React.FC<Props> = (
    // eslint-disable-next-line no-shadow
-   fetchQuizes, isLoading, quizList }
-   : InferProps<typeof List.propTypes>) => {
+   { fetchQuizes, isLoading, quizList } :
+   InferProps<typeof List.propTypes>) => {
 
    useEffect(() => {
       fetchQuizes()
@@ -47,12 +52,6 @@ List.propTypes = {
    isLoading: PropTypes.bool.isRequired,
    quizList: PropTypes.array.isRequired,
    fetchQuizes: PropTypes.func.isRequired
-}
-
-type Props = {
-   isLoading: boolean
-   quizList: object[]
-   fetchQuizes: () => object
 }
 
 const mapStateToProps = (state: { quiz: Props }) => ({

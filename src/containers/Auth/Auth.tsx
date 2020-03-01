@@ -1,20 +1,40 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { authUser } from '@s/actions/auth'
+import { authUser, AuthDataType } from '@s/actions/auth'
 import { AuthConst } from '@/constants'
-import Formic from '@lib/formic'
+import Formic, { ControlType } from '@lib/formic'
 import Input from '@com/Input'
 import Button from '@com/Button'
 import classes from './Auth.module.scss'
 
-class Auth extends Component {
-   state = {
+type Props = {
+   authUser: (authData: AuthDataType) => Promise<object>
+}
+
+type State = {
+   formControls: FormControls
+   isFormValid: boolean
+   isLoginInvalid: boolean
+}
+
+type FormControls = {
+   email: ControlType
+   password: ControlType
+}
+
+class Auth extends Component<Props, State> {
+   static propTypes = {
+      authUser: PropTypes.func.isRequired
+   }
+
+   state: Readonly<State> = {
       formControls: this.createFormControls(),
       isFormValid: false,
       isLoginInvalid: false
    }
 
-   createFormControls(): object {
+   createFormControls(): FormControls {
       return {
          email: Formic.createControl({
             type: 'email',
@@ -70,7 +90,7 @@ class Auth extends Component {
       const { formControls } = this.state
 
       return Object.keys(formControls).map((controlName: string, i) => {
-         const control: object = formControls[controlName]
+         const control: ControlType = formControls[controlName]
          return (
             <Input
                key={controlName + i}
@@ -147,12 +167,8 @@ class Auth extends Component {
    }
 }
 
-const mmapDispatchToProps = (dispatch: authUser) => ({
-   authUser: (authData: {
-      email: string,
-      password: string,
-      action: string
-   }) => dispatch(authUser(authData))
+const mmapDispatchToProps = (dispatch: any) => ({
+   authUser: (authData: AuthDataType) => dispatch(authUser(authData))
 })
 
 export default connect(null, mmapDispatchToProps)(Auth)

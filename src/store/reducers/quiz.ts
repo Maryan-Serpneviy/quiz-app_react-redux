@@ -1,34 +1,33 @@
 import Actions from '../actions/actionTypes'
+import { ActionsTypes } from '../actions/quiz'
 
-const initialState: State = {
-   quizList: [],
-   isLoading: false,
-   error: null,
-
-   quiz: [],
-   current: 0,
-   answerStatus: null,
-   completed: false,
-   results: []
+const initialState = {
+   // List
+   isLoading: false as boolean,
+   quizList: [] as [] | object[],
+   error: null as null | object,
+   // Quiz
+   quiz: [] as [] | object[],
+   current: 0 as number,
+   answerStatus: null as null | object,
+   completed: false as boolean,
+   results: [] as [] | object[]
 }
 
-interface State {
-   quizList: object[]
-   isLoading: boolean
-   error: null | object
-
-   quiz: object[]
+export type QuestionType = {
+   question: string
+   answers: Array<AnswerType>
    current: number
-   answerStatus: null | object
-   completed: boolean
-   results: object[]
 }
 
-interface Action extends State {
-   type: string
+type AnswerType = {
+   id: number
+   text: string
 }
 
-export default function quizReducer(state: State = initialState, action: Action): State {
+type StateType = typeof initialState
+
+export default function quizReducer(state = initialState, action: ActionsTypes): StateType {
    switch (action.type) {
       case Actions.FETCH_START:
          return {

@@ -2,21 +2,28 @@ import React, { useRef, useEffect } from 'react'
 import PropTypes, { InferProps } from 'prop-types'
 import classes from './Input.module.scss'
 
-const Input: React.FC<Props> = ({
-   label,
-   type,
-   value,
-   error,
-   isTouched,
-   isValid,
-   shouldValidate,
-   autoblur,
-   autofocus,
-   onChange,
-   onKeyDown,
-   onKeyUp,
-   onKeyPress
-}: InferProps<typeof Input.propTypes>) => {
+type Props = {
+   label?: string
+   type?: string
+   value?: string
+   error?: string
+   isTouched: boolean
+   isValid: boolean
+   shouldValidate: boolean
+   autoblur?: boolean
+   autofocus?: boolean
+   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
+   onKeyUp?: (event: React.KeyboardEvent<HTMLInputElement>) => void
+   onKeyPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void
+}
+
+const Input: React.FC<Props> = (
+   { label, type, value, error,
+     isTouched, isValid, shouldValidate,
+     autoblur, autofocus,
+     onChange, onKeyDown, onKeyUp, onKeyPress } :
+   InferProps<typeof Input.propTypes>) => {
 
    const inputRef = useRef(null)
 
@@ -73,22 +80,6 @@ Input.propTypes = {
    onKeyDown: PropTypes.func,
    onKeyUp: PropTypes.func,
    onKeyPress: PropTypes.func
-}
-
-type Props = {
-   label?: string
-   type?: string
-   value?: string
-   error?: string
-   isTouched: boolean
-   isValid: boolean
-   shouldValidate: boolean
-   autoblur?: boolean
-   autofocus?: boolean
-   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
-   onKeyUp?: (event: React.KeyboardEvent<HTMLInputElement>) => void
-   onKeyPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void
 }
 
 export default Input

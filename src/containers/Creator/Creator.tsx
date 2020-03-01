@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import * as Action from '@s/actions/creator'
-import Formic from '@lib/formic'
+import Formic, { ControlType } from '@lib/formic'
 import Input from '@com/Input'
 import Select from '@com/Select'
 import Button from '@com/Button'
@@ -15,17 +15,26 @@ type Props = {
       items: object[]
    }
    updateQuiz: (item: object, name: string) => void
-   uploadQuiz: () => void
+   uploadQuiz: () => Promise<object>
 }
 
 type State = {
-   correct: number
-   formControls: object
+   formControls: FormControls
    isFormValid: boolean
+   correct: number
+}
+
+type FormControls = {
+   question: ControlType
+   option1: ControlType
+   option2: ControlType
+   option3: ControlType
+   option4: ControlType
+   name: ControlType
 }
 
 @withRouter
-class Creator extends React.Component<Props, State> {
+class Creator extends Component<Props, State> {
    static propTypes = {
       quiz: PropTypes.object.isRequired,
       updateQuiz: PropTypes.func.isRequired,
@@ -33,8 +42,8 @@ class Creator extends React.Component<Props, State> {
    }
 
    state: Readonly<State> = {
-      correct: 1,
       formControls: this.createFormControls(),
+      correct: 1,
       isFormValid: false
    }
 
@@ -133,8 +142,8 @@ class Creator extends React.Component<Props, State> {
       })
    }
 
-   get quizName(): Control {
-      const name: Control = {
+   get quizName(): ControlType {
+      const name: ControlType = {
          label: 'Provide the quiz name',
          error: 'Name is too short or contains digits'
       }
@@ -146,7 +155,7 @@ class Creator extends React.Component<Props, State> {
       return name
    }
 
-   createFormControls(): object {
+   createFormControls(): FormControls {
       return {
          question: Formic.createControl({
             label: 'Enter question',
@@ -167,7 +176,7 @@ class Creator extends React.Component<Props, State> {
       }
    }
 
-   createOption(next: number): Control {
+   createOption(next: number): ControlType {
       return Formic.createControl({
          id: next,
          label: `Answer ${next}`,
@@ -226,15 +235,6 @@ class Creator extends React.Component<Props, State> {
          formControls: this.createFormControls()
       })
    }
-}
-
-type Control = {
-   id?: number
-   label: string
-   value?: string
-   error: string
-   isTouched?: boolean
-   isValid?: boolean
 }
 
 const mapStateToProps = (state: { creator: Props }) => ({

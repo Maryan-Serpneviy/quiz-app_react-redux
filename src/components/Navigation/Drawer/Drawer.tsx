@@ -10,9 +10,9 @@ type Props = {
    hideMenu: () => void
 }
 
-const Drawer: React.FC<Props> = ({
-   isAuthorized, isOpen, hideMenu
-}: InferProps<typeof Drawer.propTypes>) => {
+const Drawer: React.FC<Props> = (
+   { isAuthorized, isOpen, hideMenu } :
+   InferProps<typeof Drawer.propTypes>) => {
 
    const links = [
       { to: '/', label: 'Quiz List', exact: true }

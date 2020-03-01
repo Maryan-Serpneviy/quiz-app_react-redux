@@ -1,26 +1,21 @@
 import Actions from '../actions/actionTypes'
+import { ActionsTypes } from '../actions/creator'
 
-const initialState: State = {
+const initialState: StateType = {
    quiz: {
       name: '',
       items: []
    }
 }
 
-interface State {
+export type StateType = {
    quiz: {
-      name: string
+      name: string,
       items: object[]
    }
 }
 
-interface Action extends State {
-   type: string
-   name: string
-   item: object
-}
-
-export default function creatorReducer(state: State = initialState, action: Action): State {
+export default function creatorReducer(state = initialState, action: ActionsTypes): StateType {
    switch (action.type) {
       case Actions.UPDATE_QUIZ:
          return {
@@ -30,10 +25,11 @@ export default function creatorReducer(state: State = initialState, action: Acti
                items: [...state.quiz.items, action.item]
             }
          }
-      case 'RESET_CREATOR':
+      case Actions.RESET_CREATOR:
          return {
             ...state,
             quiz: {
+               name: '',
                items: []
             }
          }
