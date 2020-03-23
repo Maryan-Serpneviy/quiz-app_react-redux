@@ -7,8 +7,8 @@ type Props = {
    type?: string
    value?: string
    error?: string
-   isTouched: boolean
-   isValid: boolean
+   touched: boolean
+   valid: boolean
    shouldValidate: boolean
    autoblur?: boolean
    autofocus?: boolean
@@ -20,7 +20,7 @@ type Props = {
 
 const Input: React.FC<Props> = (
    { label, type, value, error,
-     isTouched, isValid, shouldValidate,
+     touched, valid, shouldValidate,
      autoblur, autofocus,
      onChange, onKeyDown, onKeyUp, onKeyPress } :
    InferProps<typeof Input.propTypes>) => {
@@ -28,12 +28,12 @@ const Input: React.FC<Props> = (
    const inputRef = useRef(null)
 
    const inputType = type || 'text'
-   const htmlFor = `${inputType}-${Math.round(Math.random() * 1000)}`
+   const htmlFor = label ? `${inputType}-${Math.round(Math.random() * 1000)}` : null
    const style = [
       classes.input
    ]
 
-   const isInvalid = (): boolean => !isValid && isTouched && shouldValidate
+   const isInvalid = (): boolean => !valid && touched && shouldValidate
 
    if (isInvalid()) {
       style.push(classes.invalid)
@@ -50,7 +50,7 @@ const Input: React.FC<Props> = (
 
    return (
       <div className={style.join(' ')}>
-         <label htmlFor={htmlFor}>{label}</label>
+         {label && <label htmlFor={htmlFor}>{label}</label>}
          <input
             ref={autofocus || autoblur ? inputRef : null}
             type={inputType}
@@ -71,8 +71,8 @@ Input.propTypes = {
    type: PropTypes.string,
    value: PropTypes.string,
    error: PropTypes.string,
-   isTouched: PropTypes.bool.isRequired,
-   isValid: PropTypes.bool.isRequired,
+   touched: PropTypes.bool.isRequired,
+   valid: PropTypes.bool.isRequired,
    shouldValidate: PropTypes.bool.isRequired,
    autoblur: PropTypes.bool,
    autofocus: PropTypes.bool,
