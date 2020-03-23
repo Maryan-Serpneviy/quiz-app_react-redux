@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+
 import { authUser, AuthDataType } from '@s/actions/auth'
 import { AuthConst } from '@/constants'
-import Formic, { ControlType } from '@lib/formic'
+import Formic, { FormControl, Control } from '@lib/formic'
 import Input from '@com/Input'
 import Button from '@com/Button'
 import classes from './Auth.module.scss'
@@ -13,14 +14,9 @@ type Props = {
 }
 
 type State = {
-   formControls: FormControls
+   formControls: { [key: string]: Control }
    isFormValid: boolean
    isLoginInvalid: boolean
-}
-
-type FormControls = {
-   email: ControlType
-   password: ControlType
 }
 
 class Auth extends Component<Props, State> {
@@ -34,9 +30,9 @@ class Auth extends Component<Props, State> {
       isLoginInvalid: false
    }
 
-   createFormControls(): FormControls {
+   createFormControls(): { [key: string]: Control } {
       return {
-         email: Formic.createControl({
+         email: new FormControl({
             type: 'email',
             label: 'Email',
             error: 'Email is invalid'
@@ -44,7 +40,7 @@ class Auth extends Component<Props, State> {
             required: true,
             email: true
          }),
-         password: Formic.createControl({
+         password: new FormControl({
             type: 'password',
             label: 'Password',
             error: 'Password is invalid'
@@ -56,6 +52,8 @@ class Auth extends Component<Props, State> {
    }
 
    render() {
+      const { isFormValid } = this.state
+
       return (
          <div className={classes.auth}>
             <div>
@@ -67,14 +65,18 @@ class Auth extends Component<Props, State> {
                   <Button
                      type="success"
                      onClick={this.loginHandler}
-                     disabled={!this.state.isFormValid}
-                  >Log in</Button>
+                     disabled={!isFormValid}
+                  >
+                     Log in
+                  </Button>
 
                   <Button
                      type="primary"
                      onClick={this.registrationHandler}
-                     disabled={!this.state.isFormValid}
-                  >Register</Button>
+                     disabled={!isFormValid}
+                  >
+                     Register
+                  </Button>
 
                   {this.state.isLoginInvalid &&
                   <span className={classes.invalid}>Incorrect email or password</span>}
@@ -86,21 +88,21 @@ class Auth extends Component<Props, State> {
 
    input = React.createRef()
 
-   renderInputs() {
+   renderInputs(): JSX.Element[] {
       const { formControls } = this.state
 
-      return Object.keys(formControls).map((controlName: string, i) => {
-         const control: ControlType = formControls[controlName]
+      return Object.keys(formControls).map((controlName: string, index) => {
+         const control: Control = formControls[controlName]
          return (
             <Input
-               key={controlName + i}
+               key={controlName + index}
                label={control.label}
                type={control.type}
                value={control.value}
                error={control.error}
-               isTouched={control.isTouched}
-               isValid={control.isValid}
-               shouldValidate={!!control.validation}
+               touched={control.touched}
+               valid={control.valid}
+               shouldValidate={Boolean(control.validators)}
                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   this.handleChange(event.target.value, controlName)
                }}
@@ -111,13 +113,15 @@ class Auth extends Component<Props, State> {
       })
    }
 
-   handleChange = (value: string, controlName: string) => {
+   handleChange = (value: string, controlName: string): void => {
       const formControls = { ...this.state.formControls }
-      const control = { ...formControls[controlName] }
+      const control: Control = {
+         ...formControls[controlName],
+         touched: true,
+         value
+      }
 
-      control.value = value
-      control.isTouched = true
-      control.isValid = Formic.validate(control.value, control.validation)
+      control.valid = Formic.validate(control.value, control.validators)
 
       formControls[controlName] = control
 
@@ -128,13 +132,13 @@ class Auth extends Component<Props, State> {
       })
    }
 
-   handleEnterKey = (event: React.KeyboardEvent<HTMLInputElement>) => {
+   handleEnterKey = (event: React.KeyboardEvent<HTMLInputElement>): void => {
       if (event.key === 'Enter') {
          this.loginHandler()
       }
    }
 
-   loginHandler = async() => {
+   loginHandler = async(): Promise<object> => {
       const authData = {
          email: this.state.formControls.email.value,
          password: this.state.formControls.password.value,
@@ -143,14 +147,15 @@ class Auth extends Component<Props, State> {
       try {
          const response = await this.props.authUser(authData)
          if (response.status === 200) {
-            //
+            // handle success (if needed)
          }
+         return response
       } catch (err) {
          this.setState({ isLoginInvalid: true })
       }
    }
 
-   registrationHandler = async() => {
+   registrationHandler = async(): Promise<object> => {
       const authData = {
          email: this.state.formControls.email.value,
          password: this.state.formControls.password.value,
@@ -159,15 +164,16 @@ class Auth extends Component<Props, State> {
       try {
          const response = await this.props.authUser(authData)
          if (response.status === 200) {
-            //
+            // handle success (if needed)
          }
+         return response
       } catch (err) {
          console.error(err)
       }
    }
 }
 
-const mmapDispatchToProps = (dispatch: any) => ({
+const mmapDispatchToProps = (dispatch: any): object => ({
    authUser: (authData: AuthDataType) => dispatch(authUser(authData))
 })
 
