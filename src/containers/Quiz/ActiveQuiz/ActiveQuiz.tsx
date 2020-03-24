@@ -10,7 +10,7 @@ type Props = {
    total?: number
    question: string
    answers: object[]
-   status: null | object
+   status: null | { [key: string]: string }
    onAnswerClick: (id: number) => void
 }
 
@@ -43,7 +43,7 @@ const ActiveQuiz: React.FC<Props> = (
          </p>
 
          <ul className={classes.options}>
-            {getAnswers().map((answer, index) => (
+            {getAnswers().map((answer: { id: number, text: string }, index) => (
                <AnswerOption
                   key={index}
                   answer={answer}
@@ -62,6 +62,7 @@ ActiveQuiz.propTypes = {
    question: PropTypes.string.isRequired,
    answers: PropTypes.array.isRequired,
    onAnswerClick: PropTypes.func.isRequired,
+   //status: PropTypes.oneOf([null, PropTypes.objectOf(PropTypes.string)])
    status: PropTypes.object
 }
 

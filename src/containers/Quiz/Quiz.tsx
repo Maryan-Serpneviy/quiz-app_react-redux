@@ -12,9 +12,9 @@ type Props = {
    isLoading: boolean
    quiz: Array<QuestionType>
    current: number
-   answerStatus: null | object
+   answerStatus: null | { [key: string]: string }
    completed: boolean
-   results: object[]
+   results: string[]
    fetchQuiz: (id: string) => void
    onAnswerClick: (id: number) => void
    restartQuiz: () => void
