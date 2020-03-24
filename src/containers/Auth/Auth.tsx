@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { authUser, AuthDataType } from '@s/actions/auth'
 import { AuthConst } from '@/constants'
-import { FormGroup, FormControl, Control, Validators } from '@lib/formic'
+import { FormGroup, FormControl, Control, Validators } from '@lib/mforms'
 import Input from '@com/Input'
 import Button from '@com/Button'
 import classes from './Auth.module.scss'
