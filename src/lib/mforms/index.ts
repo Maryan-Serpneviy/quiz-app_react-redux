@@ -69,13 +69,15 @@ class FormControl extends AbstractControl {
       this.touched = false
       this.untouched = true
       this.invalid = false
+      this.pristine = true
+      this.dirty = false
       this.valid = !validators
       this.errors = {}
 
       this.id = control.id || Math.round(Math.random() * 1000)
-      this.type = control.type
       this.label = control.label
-      this.error = control.error
+      this.type = control.type || null
+      this.error = control.error || null
       
       this.validators = validators
 
