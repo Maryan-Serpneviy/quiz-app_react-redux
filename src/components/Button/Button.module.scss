@@ -49,6 +49,29 @@
    background-color: $fail-color;   
 }
 
+.delete {
+   position: absolute;
+   top: 26px;
+   right: -14px;
+   border: none;
+   border-radius: 0;
+   background-color: $danger-color;
+   font-size: 30px;
+   padding: 0 10px;
+   height: 33px;
+   line-height: 5px;
+
+   &:hover {
+      color: #fff;
+      position: absolute;
+      background-color: lighten($danger-color, 3)
+   }
+
+   &:active {
+      display: none;
+   }
+}
+
 .primary {
    background-color: $primary-color;
    color: $text-color;

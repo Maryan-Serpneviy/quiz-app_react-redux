@@ -141,6 +141,7 @@ class Creator extends Component<Props, State> {
 
          return (
             <React.Fragment key={index}>
+               <div style={{ position: 'relative' }}>
                <Input
                   label={control.label}
                   value={control.value}
@@ -154,6 +155,12 @@ class Creator extends Component<Props, State> {
                   }}
                   autofocus={controlName === 'question'}
                />
+               {control.label.includes('Answer') && (
+                  <Button type="delete" onMouseDown={() => this.removeOption(control.label)}>
+                     &times;
+                  </Button>
+               )}
+               </div>
                {index === 1 && <hr/>}
             </React.Fragment>
          )
@@ -164,9 +171,21 @@ class Creator extends Component<Props, State> {
       const newOption = this.createOption(this.optionsCount + 1)
       this.state.form.controls[`option${this.optionsCount + 1}`] = newOption
 
-      this.setState({
-         form: this.state.form
-      })
+      this.setState({ ...this.state })
+   }
+
+   removeOption = (label: string) => {
+      const { controls } = this.state.form
+      
+      for (const control in controls) {
+         if (controls.hasOwnProperty(control)) {
+            if (controls[control].label === label) {
+               delete controls[control]
+            }
+         }
+      }
+      
+      this.setState({ ...this.state })
    }
 
    handleChange = (value: string, controlName: string): void => {
