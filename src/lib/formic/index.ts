@@ -1,82 +1,162 @@
-type Validation = {
-   required: boolean
-   email: boolean
-   name: boolean
-   minLength: number
+type ValidatorsType = {
+   required?: (value: string) => boolean
+   email?: (value: string) => boolean
+   title?: (value: string) => boolean
+   minLength?: (length: number) => boolean
+   maxLength?: (length: number) => boolean
+   pattern?: (re: RegExp) => boolean
 }
 
-class Formic {
-   createControl(config: ControlType, validation: Validation): ControlType {
-      return {
-         isTouched: false,
-         isValid: !validation,
-         value: '',
-         ...config,
-         validation
+class Validators {
+   static required(value: string): boolean {
+      return Boolean(value.trim())
+   }
+
+   static email(value: string): boolean {
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,3}))$/
+      return re.test(String(value).toLowerCase())
+   }
+
+   static title(value: string): boolean {
+      const re = /^[- a-zA-Zа-яА-яїЇіІєЄьЬ#№]+$/
+      return re.test(String(value).toLowerCase())
+   }
+
+   static minLength(minLength: number): Function {
+      return function minlength(value: string): boolean {
+         return value.trim().length >= minLength
       }
    }
 
-   validate(value: string, validation: Validation = null): boolean {
-      if (!validation) {
-         return true
+   static maxLength(maxLength: number): Function {
+      return function maxlength(value: string): boolean {
+         return value.trim().length <= maxLength
       }
-
-      let isValid = true
-
-      if (validation.required) {
-         isValid = value.trim() !== '' && isValid
-      }
-
-      if (validation.email) {
-         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-         isValid = re.test(String(value).toLowerCase()) && isValid
-      }
-
-      if (validation.name) {
-         const re = /^[ a-zA-Zа-яА-яїЇіІєЄьЬ#№]+$/
-         isValid = re.test(value.toLowerCase()) && isValid
-      }
-      
-      if (validation.minLength) {
-         isValid = value.trim().length >= validation.minLength && isValid
-      }
-      
-      return isValid
    }
 
-   validateForm(formControls: object): boolean {
-      let isFormValid: boolean = !this.hasRepeatingValues(formControls)
+   static pattern(re: RegExp): Function {
+      return function checkPattern(value: string): boolean {
+         return re.test(String(value).toLowerCase())
+      }
+   }
+}
 
-      for (let control in formControls) {
-         if (formControls.hasOwnProperty(control)) {
-            isFormValid = formControls[control].isValid && isFormValid
+abstract class AbstractControl {
+   constructor() { /**/ }
+   // custom
+   validators: ValidatorsType
+   type: InputType
+   label: string
+   error: string
+   // built-in
+   value: string
+   touched: boolean
+   untouched: boolean
+   pristine: boolean
+   dirty: boolean
+   invalid: boolean
+   valid: boolean
+   errors: { [key: string]: boolean } | {}
+
+   validate: () => void
+}
+
+class FormControl extends AbstractControl {
+   constructor(control: Control, validators?: ValidatorsType) {
+      super()
+      this.value = ''
+      this.touched = false
+      this.untouched = true
+      this.invalid = false
+      this.valid = !validators
+      this.errors = {}
+
+      this.type = control.type
+      this.label = control.label
+      this.error = control.error
+      
+      this.validators = validators
+
+      this.validate = function(): void {
+         if (!this.validators) {
+            this.valid = true
+            return
          }
-      }
+         this.touched = true
+         this.untouched = false
+         this.pristine = !this.value.length
+         this.dirty = Boolean(this.value.length)
 
-      return isFormValid
+         let isValid = true
+         for (const validator of this.validators) {
+            isValid = validator(this.value) && isValid
+
+            // storing errors
+            !validator(this.value) ?
+               this.errors[validator.name] = true :
+               this.errors[validator.name] = false
+         }
+         this.valid = isValid
+         this.invalid = !isValid
+      }
+   }
+}
+
+abstract class AbstractGroup {
+   constructor() { /**/ }
+
+   controls: { [key: string]: AbstractControl }
+   valid: true
+   invalid: boolean
+   validate: () => void
+}
+
+class FormGroup extends AbstractGroup {
+   constructor(controls: { [key: string]: AbstractControl }) {
+      super()
+
+      this.controls = controls
+      this.valid = true
+      this.invalid = false
+
+      this.validate = function(): void {
+         let isFormValid: boolean = !this._hasRepeatingValues(controls)
+
+         for (const control in this.controls) {
+            if (controls.hasOwnProperty(control)) {
+               isFormValid = controls[control].valid && isFormValid
+            }
+         }
+         this.valid = isFormValid
+         this.invalid = !isFormValid
+      }
    }
 
-   hasRepeatingValues(formControls: object): boolean {
+   _hasRepeatingValues(): boolean {
       let values = new Set()
-      const controlsCount: number = Object.keys(formControls).length
+      const controlsCount: number = Object.keys(this.controls).length
 
-      for (let control in formControls) {
-         if (formControls.hasOwnProperty(control)) {
-            values.add(formControls[control].value)
+      for (let control in this.controls) {
+         if (this.controls.hasOwnProperty(control)) {
+            values.add(this.controls[control].value)
          }
       }
       return controlsCount !== values.size
    }
 }
 
-export type ControlType = {
-   type: string
+type InputType = 'text' | 'tel' | 'url' | 'number' | 'email' | 'password'
+
+interface Control {
+   type: InputType
    label: string
-   value?: string
+   value: string
    error: string
-   isTouched?: boolean
-   isValid?: boolean
-   validation: object
+   touched: boolean
+   untouched: boolean
+   valid: boolean
+   invalid: boolean
+   validators: ValidatorsType
 }
 
-export default new Formic()
+export { FormGroup, FormControl, Control, Validators }
