@@ -4,10 +4,11 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import * as Action from '@s/actions/creator'
-import { FormGroup, FormControl, Control, Validators } from '@lib/formic'
+import { FormGroup, FormControl, Control, Validators } from '@lib/mforms'
 import Input from '@com/Input'
 import Select from '@com/Select'
 import Button from '@com/Button'
+import { MAX_OPTIONS } from '@/constants'
 import classes from './Creator.module.scss'
 
 type Props = {
@@ -41,9 +42,15 @@ class Creator extends Component<Props, State> {
 
    createForm(): { [key: string]: Control } {
       return new FormGroup({
+         name: new FormControl({ ...this.quizName }, [
+            Validators.required,
+            Validators.title,
+            Validators.minLength(10),
+            Validators.maxLength(25)
+         ]),
+
          question: new FormControl({
-            label: 'Enter question',
-            error: 'Question is too short'
+            label: 'Question'
          }, [
             Validators.required,
             Validators.minLength(20),
@@ -51,25 +58,18 @@ class Creator extends Component<Props, State> {
          ]),
 
          option1: this.createOption(1),
-         option2: this.createOption(2),
-         option3: this.createOption(3),
-         option4: this.createOption(4),
-
-         name: new FormControl({ ...this.quizName }, [
-            Validators.required,
-            Validators.title,
-            Validators.minLength(8),
-            Validators.maxLength(25)
-         ])
+         option2: this.createOption(2)
       })
    }
 
    createOption(next: number): Control {
       return new FormControl({
          id: next,
-         label: `Answer ${next}`,
-         error: 'Max length exceeded'
-      }, [Validators.maxLength(50)])
+         label: `Answer ${next}`
+      }, [
+         Validators.required,
+         Validators.maxLength(50)
+      ])
    }
 
    render() {
@@ -87,7 +87,7 @@ class Creator extends Component<Props, State> {
 
                <form onSubmit={e => e.preventDefault()}>
                   {this.renderInputs()}
-                  
+
                   <Select
                      label="Provide the correct answer"
                      value={correct}
@@ -115,6 +115,14 @@ class Creator extends Component<Props, State> {
                   >
                      Create quiz
                   </Button>
+
+                  <Button
+                     type="primary"
+                     onClick={this.addOption}
+                     disabled={this.optionsCount >= MAX_OPTIONS}
+                  >
+                     Add option
+                  </Button>
                   
                   {!isFormValid && (
                      <div className={classes.error}>Empty or repeating fields</div>
@@ -136,18 +144,28 @@ class Creator extends Component<Props, State> {
                <Input
                   label={control.label}
                   value={control.value}
-                  error={control.error}
                   touched={control.touched}
                   valid={control.valid}
                   shouldValidate={Boolean(control.validators)}
+                  error={control.error}
+                  errors={control.errors}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                      this.handleChange(event.target.value, controlName)
                   }}
                   autofocus={controlName === 'question'}
                />
-               {index === 0 && <hr/>}
+               {index === 1 && <hr/>}
             </React.Fragment>
          )
+      })
+   }
+
+   addOption = () => {
+      const newOption = this.createOption(this.optionsCount + 1)
+      this.state.form.controls[`option${this.optionsCount + 1}`] = newOption
+
+      this.setState({
+         form: this.state.form
       })
    }
 
@@ -165,10 +183,14 @@ class Creator extends Component<Props, State> {
       })
    }
 
+   get optionsCount() {
+      const { controls } = this.state.form
+      return (Object.keys(controls).filter(control => control.includes('option')).length)
+   }
+
    get quizName(): Control {
       const name: Control = {
-         label: 'Provide the quiz name',
-         error: 'Name is too short or contains digits'
+         label: 'Provide the quiz name'
       }
       if (this.state) { // state is initialized
          name.value = this.state.form.controls.name.value
@@ -187,25 +209,25 @@ class Creator extends Component<Props, State> {
    addQuestion = (event: React.MouseEvent<HTMLButtonElement>): void => {
       event.preventDefault()
 
-      const {
-         question,
-         option1,
-         option2,
-         option3,
-         option4,
-         name
-      } = this.state.form.controls
+      const { question, name } = this.state.form.controls
       
+      const options: Array<FormControl> = [] // filtering options
+      Object.entries(this.state.form.controls).filter(control => {
+         if (control[0].includes('option')) {
+            options.push(control[1])
+         }
+      })
+      
+      const answers = options.map(option => ({
+         id: option.id,
+         text: option.value
+      }))
+
       const questionItem = {
          question: question.value,
          id: this.props.quiz.items.length + 1,
          correct: this.state.correct,
-         answers: [
-            { id: option1.id, text: option1.value },
-            { id: option2.id, text: option2.value },
-            { id: option3.id, text: option3.value },
-            { id: option4.id, text: option4.value }
-         ]
+         answers
       }
 
       this.props.updateQuiz(questionItem, name.value)

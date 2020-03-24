@@ -5,3 +5,4 @@ export enum AuthConst {
 }
 
 export const QUESTION_DELAY = 750 // ms
+export const MAX_OPTIONS = 5
