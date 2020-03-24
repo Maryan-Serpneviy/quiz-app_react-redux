@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import * as Action from '@s/actions/quiz'
 import { QuestionType } from '@s/reducers/quiz'
 import LoaderSm from '@com/LoaderSm'
-import ActiveQuiz from '@com/ActiveQuiz'
-import CompletedQuiz from '@com/CompletedQuiz'
+import ActiveQuiz from './ActiveQuiz'
+import CompletedQuiz from './CompletedQuiz'
 import classes from './Quiz.module.scss'
 
 type Props = {
