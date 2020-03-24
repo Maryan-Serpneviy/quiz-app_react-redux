@@ -69,8 +69,8 @@ const Input: React.FC<Props> = (
             onFocus={props.onFocus ? props.onFocus : null}
             onBlur={props.onBlur ? props.onBlur : null}
          />
-         {error && isInvalid() && <span>{error || 'Value is incorrect'}</span>}
-         {errors && (
+         {error && !errors && isInvalid() && <span>{error}</span>}
+         {!error && errors && (
             <ul className={classes.errors}>
                {Object.entries(errors).map(error => {
                   if (error[1]) {
