@@ -4,10 +4,7 @@ import classes from './AnswerOption.module.scss'
 
 type Props = {
    onAnswerClick: (id: number) => void
-   answer: {
-      id: number
-      text: string
-   }
+   answer: { id: number, text: string }
    status?: string
 }
 
@@ -33,7 +30,7 @@ const AnswerOption: React.FC<Props> = (
 
 AnswerOption.propTypes = {
    onAnswerClick: PropTypes.func.isRequired,
-   answer: PropTypes.object.isRequired,
+   answer: PropTypes.exact({ id: PropTypes.number, text: PropTypes.string }),
    status: PropTypes.string
 }
 
