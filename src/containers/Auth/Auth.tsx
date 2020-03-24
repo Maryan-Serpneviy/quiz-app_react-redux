@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { authUser, AuthDataType } from '@s/actions/auth'
 import { AuthConst } from '@/constants'
-import Formic, { FormControl, Control } from '@lib/formic'
+import { FormGroup, FormControl, Control, Validators } from '@lib/formic'
 import Input from '@com/Input'
 import Button from '@com/Button'
 import classes from './Auth.module.scss'
@@ -14,7 +14,7 @@ type Props = {
 }
 
 type State = {
-   formControls: { [key: string]: Control }
+   form: { [key: string]: Control }
    isFormValid: boolean
    isLoginInvalid: boolean
 }
@@ -25,34 +25,36 @@ class Auth extends Component<Props, State> {
    }
 
    state: Readonly<State> = {
-      formControls: this.createFormControls(),
+      form: this.createForm(),
       isFormValid: false,
       isLoginInvalid: false
    }
 
-   createFormControls(): { [key: string]: Control } {
-      return {
+   createForm(): { [key: string]: Control } {
+      return new FormGroup({
          email: new FormControl({
             type: 'email',
             label: 'Email',
             error: 'Email is invalid'
-         }, {
-            required: true,
-            email: true
-         }),
+         }, [
+            Validators.required,
+            Validators.email,
+            Validators.maxLength(30)
+         ]),
          password: new FormControl({
             type: 'password',
             label: 'Password',
             error: 'Password is invalid'
-         }, {
-            required: true,
-            minLength: 6
-         })
-      }
+         }, [
+            Validators.required,
+            Validators.minLength(6),
+            Validators.maxLength(20)
+         ])
+      })
    }
 
    render() {
-      const { isFormValid } = this.state
+      const { isFormValid, isLoginInvalid } = this.state
 
       return (
          <div className={classes.auth}>
@@ -78,7 +80,7 @@ class Auth extends Component<Props, State> {
                      Register
                   </Button>
 
-                  {this.state.isLoginInvalid &&
+                  {isLoginInvalid &&
                   <span className={classes.invalid}>Incorrect email or password</span>}
                </form>
             </div>
@@ -89,19 +91,19 @@ class Auth extends Component<Props, State> {
    input = React.createRef()
 
    renderInputs(): JSX.Element[] {
-      const { formControls } = this.state
+      const { controls } = this.state.form
 
-      return Object.keys(formControls).map((controlName: string, index) => {
-         const control: Control = formControls[controlName]
+      return Object.keys(controls).map((controlName: string, index) => {
+         const control: Control = controls[controlName]
          return (
             <Input
                key={controlName + index}
-               label={control.label}
                type={control.type}
+               label={control.label}
                value={control.value}
-               error={control.error}
                touched={control.touched}
                valid={control.valid}
+               error={control.error}
                shouldValidate={Boolean(control.validators)}
                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   this.handleChange(event.target.value, controlName)
@@ -114,21 +116,17 @@ class Auth extends Component<Props, State> {
    }
 
    handleChange = (value: string, controlName: string): void => {
-      const formControls = { ...this.state.formControls }
-      const control: Control = {
-         ...formControls[controlName],
-         touched: true,
-         value
-      }
+      const { form } = this.state
+      const control = form.controls[controlName]
+      control.value = value
 
-      control.valid = Formic.validate(control.value, control.validators)
-
-      formControls[controlName] = control
-
+      control.validate()
+      form.validate()
+      
       this.setState({
-         formControls,
+         form,
          isLoginInvalid: false,
-         isFormValid: Formic.validateForm(formControls)
+         isFormValid: form.valid
       })
    }
 
@@ -140,8 +138,8 @@ class Auth extends Component<Props, State> {
 
    loginHandler = async(): Promise<object> => {
       const authData = {
-         email: this.state.formControls.email.value,
-         password: this.state.formControls.password.value,
+         email: this.state.form.controls.email.value,
+         password: this.state.form.controls.password.value,
          action: AuthConst.SIGN_IN
       }
       try {
@@ -157,8 +155,8 @@ class Auth extends Component<Props, State> {
 
    registrationHandler = async(): Promise<object> => {
       const authData = {
-         email: this.state.formControls.email.value,
-         password: this.state.formControls.password.value,
+         email: this.state.form.controls.email.value,
+         password: this.state.form.controls.password.value,
          action: AuthConst.SIGN_UP
       }
       try {

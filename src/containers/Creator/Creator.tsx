@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+
 import * as Action from '@s/actions/creator'
-import Formic, { ControlType } from '@lib/formic'
+import { FormGroup, FormControl, Control, Validators } from '@lib/formic'
 import Input from '@com/Input'
 import Select from '@com/Select'
 import Button from '@com/Button'
@@ -19,18 +20,9 @@ type Props = {
 }
 
 type State = {
-   formControls: FormControls
+   form: { [key: string]: Control }
    isFormValid: boolean
    correct: number
-}
-
-type FormControls = {
-   question: ControlType
-   option1: ControlType
-   option2: ControlType
-   option3: ControlType
-   option4: ControlType
-   name: ControlType
 }
 
 @withRouter
@@ -42,9 +34,42 @@ class Creator extends Component<Props, State> {
    }
 
    state: Readonly<State> = {
-      formControls: this.createFormControls(),
+      form: this.createForm(),
       correct: 1,
       isFormValid: false
+   }
+
+   createForm(): { [key: string]: Control } {
+      return new FormGroup({
+         question: new FormControl({
+            label: 'Enter question',
+            error: 'Question is too short'
+         }, [
+            Validators.required,
+            Validators.minLength(20),
+            Validators.maxLength(100)
+         ]),
+
+         option1: this.createOption(1),
+         option2: this.createOption(2),
+         option3: this.createOption(3),
+         option4: this.createOption(4),
+
+         name: new FormControl({ ...this.quizName }, [
+            Validators.required,
+            Validators.title,
+            Validators.minLength(8),
+            Validators.maxLength(25)
+         ])
+      })
+   }
+
+   createOption(next: number): Control {
+      return new FormControl({
+         id: next,
+         label: `Answer ${next}`,
+         error: 'Max length exceeded'
+      }, [Validators.maxLength(50)])
    }
 
    render() {
@@ -101,10 +126,10 @@ class Creator extends Component<Props, State> {
    }
 
    renderInputs() {
-      const { formControls } = this.state
+      const { controls } = this.state.form
       
-      return Object.keys(formControls).map((controlName: string, index) => {
-         const control = formControls[controlName]
+      return Object.keys(controls).map((controlName: string, index) => {
+         const control: Control = controls[controlName]
 
          return (
             <React.Fragment key={index}>
@@ -112,9 +137,9 @@ class Creator extends Component<Props, State> {
                   label={control.label}
                   value={control.value}
                   error={control.error}
-                  isTouched={control.isTouched}
-                  isValid={control.isValid}
-                  shouldValidate={!!control.validation}
+                  touched={control.touched}
+                  valid={control.valid}
+                  shouldValidate={Boolean(control.validators)}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                      this.handleChange(event.target.value, controlName)
                   }}
@@ -126,71 +151,40 @@ class Creator extends Component<Props, State> {
       })
    }
 
-   handleChange = (value: string, controlName: string) => {
-      const formControls = { ...this.state.formControls }
-      const control = { ...formControls[controlName] }
-
+   handleChange = (value: string, controlName: string): void => {
+      const { form } = this.state
+      const control = form.controls[controlName]
       control.value = value
-      control.isTouched = true
-      control.isValid = Formic.validate(control.value, control.validation)
 
-      formControls[controlName] = control
+      control.validate()
+      form.validate()
 
       this.setState({
-         formControls,
-         isFormValid: Formic.validateForm(formControls)
+         form,
+         isFormValid: form.valid
       })
    }
 
-   get quizName(): ControlType {
-      const name: ControlType = {
+   get quizName(): Control {
+      const name: Control = {
          label: 'Provide the quiz name',
          error: 'Name is too short or contains digits'
       }
       if (this.state) { // state is initialized
-         name.value = this.state.formControls.name.value
-         name.isTouched = true
-         name.isValid = true
+         name.value = this.state.form.controls.name.value
+         name.touched = true
+         name.valid = true
       }
       return name
    }
 
-   createFormControls(): FormControls {
-      return {
-         question: Formic.createControl({
-            label: 'Enter question',
-            error: 'Question is too short'
-         }, {
-            required: true,
-            minLength: 20
-         }),
-         option1: this.createOption(1),
-         option2: this.createOption(2),
-         option3: this.createOption(3),
-         option4: this.createOption(4),
-         name: Formic.createControl({ ...this.quizName }, {
-            required: true,
-            name: true,
-            minLength: 8
-         })
-      }
-   }
-
-   createOption(next: number): ControlType {
-      return Formic.createControl({
-         id: next,
-         label: `Answer ${next}`,
-         error: 'Cannot be empty'
-      }, { required: true })
-   }
-
-   handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+   handleSelect = (event: React.ChangeEvent<HTMLSelectElement>): void => {
       this.setState({
          correct: Number(event.target.value)
       })
    }
 
-   addQuestion = (event: React.MouseEvent<HTMLButtonElement>) => {
+   addQuestion = (event: React.MouseEvent<HTMLButtonElement>): void => {
       event.preventDefault()
 
       const {
@@ -200,7 +194,7 @@ class Creator extends Component<Props, State> {
          option3,
          option4,
          name
-      } = this.state.formControls
+      } = this.state.form.controls
       
       const questionItem = {
          question: question.value,
@@ -218,21 +212,22 @@ class Creator extends Component<Props, State> {
       this.resetState()
    }
 
-   createQuiz = async (event: React.MouseEvent<HTMLButtonElement>) => {
+   createQuiz = async (event: React.MouseEvent<HTMLButtonElement>): Promise<object> => {
       event.preventDefault()
 
       const response = await this.props.uploadQuiz()
-      if (response.statusText === 'OK') {
+      if (response.statusText === 'OK' || response.status === 200) {
          this.resetState()
          this.props.history.push('/') // go to list
       }
+      return response
    }
 
    resetState() {
       this.setState({
          correct: 1,
          isFormValid: false,
-         formControls: this.createFormControls()
+         form: this.createForm()
       })
    }
 }
