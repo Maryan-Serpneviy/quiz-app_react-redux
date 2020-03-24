@@ -34,4 +34,9 @@
    &.invalid label {
       color: $danger-color;
    }
+
+   .errors {
+      color: darken($danger-color, 20);
+      font-weight: bold;
+   }
 }

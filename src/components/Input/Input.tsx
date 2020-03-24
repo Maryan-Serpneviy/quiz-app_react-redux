@@ -7,22 +7,28 @@ type Props = {
    type?: string
    value?: string
    error?: string
-   touched: boolean
-   valid: boolean
+   touched?: boolean
+   untouched?: boolean
+   dirty?: boolean
+   pristine?: boolean
+   valid?: boolean
+   invalid?: boolean
    shouldValidate: boolean
+   errors?: object
    autoblur?: boolean
    autofocus?: boolean
    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
    onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
    onKeyUp?: (event: React.KeyboardEvent<HTMLInputElement>) => void
    onKeyPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void
+   onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void
+   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
 }
 
 const Input: React.FC<Props> = (
-   { label, type, value, error,
-     touched, valid, shouldValidate,
-     autoblur, autofocus,
-     onChange, onKeyDown, onKeyUp, onKeyPress } :
+   { label, type, value, error, touched, valid, errors,
+     shouldValidate, autoblur, autofocus, onChange,
+     ...props } :
    InferProps<typeof Input.propTypes>) => {
 
    const inputRef = useRef(null)
@@ -47,7 +53,7 @@ const Input: React.FC<Props> = (
          inputRef.current.focus()
       }
    }, [])
-
+   
    return (
       <div className={style.join(' ')}>
          {label && <label htmlFor={htmlFor}>{label}</label>}
@@ -57,11 +63,23 @@ const Input: React.FC<Props> = (
             id={htmlFor}
             value={value}
             onChange={onChange}
-            onKeyDown={onKeyDown ? onKeyDown : null}
-            onKeyUp={onKeyUp ? onKeyUp : null}
-            onKeyPress={onKeyPress ? onKeyPress : null}
+            onKeyDown={props.onKeyDown ? props.onKeyDown : null}
+            onKeyUp={props.onKeyUp ? props.onKeyUp : null}
+            onKeyPress={props.onKeyPress ? props.onKeyPress : null}
+            onFocus={props.onFocus ? props.onFocus : null}
+            onBlur={props.onBlur ? props.onBlur : null}
          />
-         {isInvalid() && <span>{error || 'Value is incorrect'}</span>}
+         {error && isInvalid() && <span>{error || 'Value is incorrect'}</span>}
+         {errors && (
+            <ul className={classes.errors}>
+               {Object.entries(errors).map(error => {
+                  if (error[1]) {
+                     return <li key={error[0]}>{error[0]}</li>
+                  }
+                  return null
+               })}
+            </ul>
+         )}
       </div>
    )
 }
@@ -69,17 +87,24 @@ const Input: React.FC<Props> = (
 Input.propTypes = {
    label: PropTypes.string,
    type: PropTypes.string,
-   value: PropTypes.string,
+   value: PropTypes.string.isRequired,
    error: PropTypes.string,
-   touched: PropTypes.bool.isRequired,
-   valid: PropTypes.bool.isRequired,
-   shouldValidate: PropTypes.bool.isRequired,
+   touched: PropTypes.bool,
+   untouched: PropTypes.bool,
+   dirty: PropTypes.bool,
+   pristine: PropTypes.bool,
+   valid: PropTypes.bool,
+   invalid: PropTypes.bool,
+   shouldValidate: PropTypes.bool,
+   errors: PropTypes.object,
    autoblur: PropTypes.bool,
    autofocus: PropTypes.bool,
    onChange: PropTypes.func.isRequired,
    onKeyDown: PropTypes.func,
    onKeyUp: PropTypes.func,
-   onKeyPress: PropTypes.func
+   onKeyPress: PropTypes.func,
+   onFocus: PropTypes.func,
+   onBlur: PropTypes.func
 }
 
 export default Input
