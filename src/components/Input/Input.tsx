@@ -63,11 +63,11 @@ const Input: React.FC<Props> = (
             id={htmlFor}
             value={value}
             onChange={onChange}
-            onKeyDown={props.onKeyDown ? props.onKeyDown : null}
-            onKeyUp={props.onKeyUp ? props.onKeyUp : null}
-            onKeyPress={props.onKeyPress ? props.onKeyPress : null}
-            onFocus={props.onFocus ? props.onFocus : null}
-            onBlur={props.onBlur ? props.onBlur : null}
+            onKeyDown={props.onKeyDown || null}
+            onKeyUp={props.onKeyUp || null}
+            onKeyPress={props.onKeyPress || null}
+            onFocus={props.onFocus || null}
+            onBlur={props.onBlur || null}
          />
          {error && !errors && isInvalid() && <span>{error}</span>}
          {!error && errors && (

@@ -27,8 +27,8 @@ const Button: React.FC<Props> = (
          style={{ ...style }}
          disabled={disabled}
          onClick={onClick}
-         onMouseDown={props.onMouseDown ? props.onMouseDown : null}
-         onMouseUp={props.onMouseUp ? props.onMouseUp : null}
+         onMouseDown={props.onMouseDown || null}
+         onMouseUp={props.onMouseUp || null}
       >
          {children}
       </button>

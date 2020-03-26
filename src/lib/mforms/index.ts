@@ -2,9 +2,9 @@ type ValidatorsType = {
    required?: (value: string) => boolean
    email?: (value: string) => boolean
    title?: (value: string) => boolean
-   minLength?: (length: number) => boolean
-   maxLength?: (length: number) => boolean
-   pattern?: (re: RegExp) => boolean
+   minLength?: (length: number) => (value: string) => boolean
+   maxLength?: (length: number) => (value: string) => boolean
+   pattern?: (re: RegExp) => (value: string) => boolean
 }
 
 class Validators {
@@ -65,6 +65,7 @@ abstract class AbstractControl {
 class FormControl extends AbstractControl {
    constructor(control: Control, validators?: ValidatorsType) {
       super()
+
       this.value = ''
       this.touched = false
       this.untouched = true
@@ -108,7 +109,6 @@ class FormControl extends AbstractControl {
 
 abstract class AbstractGroup {
    constructor() { /**/ }
-
    controls: { [key: string]: AbstractControl }
    valid: true
    invalid: boolean
@@ -122,7 +122,6 @@ class FormGroup extends AbstractGroup {
       this.controls = controls
       this.valid = true
       this.invalid = false
-
       this.validate = function(): void {
          let isFormValid: boolean = !this._hasRepeatingValues(controls)
 
