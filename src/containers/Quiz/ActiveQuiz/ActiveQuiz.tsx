@@ -9,18 +9,20 @@ type Props = {
    current: number
    total?: number
    question: string
-   answers: object[]
+   answers: Array<{ id: number, text: string }>
    status: null | { [key: string]: string }
    onAnswerClick: (id: number) => void
 }
+
+type Answers = Array<{ id: number, text: string }>
 
 const ActiveQuiz: React.FC<Props> = (
    { current, total, question, answers, status, onAnswerClick } :
    InferProps<typeof ActiveQuiz.propTypes>) => {
 
-   let cached = useRef(null) // persist once shuffled answers between renders
+   const cached = useRef(null) // persist once shuffled answers between renders
 
-   const getAnswers = (items: object[] = answers): object[] => {
+   const getAnswers = (items: Answers = answers): Answers => {
       let shuffled
       if (!status) {
          shuffled = clone(shuffle(items))
@@ -34,10 +36,7 @@ const ActiveQuiz: React.FC<Props> = (
    return (
       <div className={classes.ActiveQuiz}>
          <p className={classes.question}>
-            <span>
-               <strong>{current}. </strong>
-               {question}
-            </span>
+            <span>{question}</span>
 
             <small>{current} / {total}</small>
          </p>

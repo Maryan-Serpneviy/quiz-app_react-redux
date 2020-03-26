@@ -1,20 +1,80 @@
 // Caviar Dreams
-@font-face: "Caviar Dreams" {
+@font-face {
 	font-family: "Caviar Dreams";
-	src: url('/assets/fonts/Caviar-Dreams/CaviarDreams.ttf') format('truetype')
+	src: url("../fonts/Caviar-Dreams/CaviarDreams.ttf")
 }
 
-@font-face: "Caviar Dreams Bold" {
+@font-face {
 	font-family: "Caviar Dreams Bold";
-	src: url('/assets/fonts/Caviar-Dreams/CaviarDreams_Bold.ttf') format('truetype')
+	src: url("../fonts/Caviar-Dreams/CaviarDreams_Bold.ttf")
 }
 
-@font-face: "Caviar Dreams Bold" {
-	font-family: "Caviar Dreams Bold";
-	src: url('/assets/fonts/Caviar-Dreams/CaviarDreams_Italic.ttf') format('truetype')
+@font-face {
+	font-family: "Caviar Dreams Italic";
+	src: url('../fonts/Caviar-Dreams/CaviarDreams_Italic.ttf')
 }
 
-@font-face: "Caviar Dreams Bold Italic" {
+@font-face {
 	font-family: "Caviar Dreams Bold Italic";
-	src: url('/assets/fonts/Caviar-Dreams/CaviarDreams_BoldItalic.ttf') format('truetype')
+	src: url('../fonts/Caviar-Dreams/CaviarDreams_BoldItalic.ttf')
+}
+// Khand
+@font-face {
+	font-family: "Khand";
+	src: url("../fonts/khand.ttf")
+}
+// Monterey
+@font-face {
+	font-family: "Monterey";
+	src: url("../fonts/Monterey/Monterey.ttf")
+}
+
+@font-face {
+	font-family: "Monterey Bold";
+	src: url("../fonts/Monterey/Monterey-Bold.ttf")
+}
+
+@font-face {
+	font-family: "Monterey Italic";
+	src: url("../fonts/Monterey/Monterey-Italic.ttf")
+}
+
+@font-face {
+	font-family: "Monterey Medium";
+	src: url("../fonts/Monterey/MontereyMedium.ttf")
+}
+// Titillium-web
+@font-face {
+	font-family: "Titillium Regular";
+	src: url("../fonts/Titillium-web/TitilliumWeb-Regular.ttf");
+}
+
+@font-face {
+	font-family: "Titillium Bold";
+	src: url("../fonts/Titillium-web/TitilliumWeb-Bold.ttf");
+}
+
+@font-face {
+	font-family: "Titillium Italic";
+	src: url("../fonts/Titillium-web/TitilliumWeb-Italic.ttf");
+}
+
+@font-face {
+	font-family: "Titillium Black";
+	src: url("../fonts/Titillium-web/TitilliumWeb-Black.ttf");
+}
+
+@font-face {
+	font-family: "Titillium Semibold";
+	src: url("../fonts/Titillium-web/TitilliumWeb-Semibold.ttf");
+}
+
+@font-face {
+	font-family: "Titillium Semibold Italic";
+	src: url("../fonts/Titillium-web/TitilliumWeb-SemiBoldItalic.ttf");
+}
+
+@font-face {
+	font-family: "Titillium Light";
+	src: url("../fonts/Titillium-web/TitilliumWeb-Light.ttf");
 }

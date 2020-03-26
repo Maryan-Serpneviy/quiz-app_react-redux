@@ -19,8 +19,17 @@
 .question {
    display: flex;
    justify-content: space-between;
-   text-shadow: $text-shadow;
-   font-size: 18px;
+   font-size: 19px;
+   padding: 15px;
+   border-radius: 5px;
+   background-color: rgba(255, 255, 255, 0.7);
+   color: #000;
+   span {
+      font-family: monospace;
+   }
+   small {
+      color: #fff;
+   }
 }
 
 .options {
