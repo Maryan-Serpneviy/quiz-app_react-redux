@@ -1,19 +1,14 @@
 import Actions from '../actions/actionTypes'
 import { ActionsTypes } from '../actions/creator'
+import { IQuizItem } from '@/interfaces'
 
-const initialState: StateType = {
+const initialState = {
    quiz: {
-      name: '',
-      items: []
+      name: '' as string,
+      items: [] as [] | Array<IQuizItem>
    }
 }
-
-export type StateType = {
-   quiz: {
-      name: string,
-      items: object[]
-   }
-}
+export type StateType = typeof initialState
 
 export default function creatorReducer(state = initialState, action: ActionsTypes): StateType {
    switch (action.type) {

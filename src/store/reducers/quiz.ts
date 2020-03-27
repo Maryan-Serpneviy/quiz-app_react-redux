@@ -1,31 +1,22 @@
 import Actions from '../actions/actionTypes'
 import { ActionsTypes } from '../actions/quiz'
+import { IQuizName, IQuizItem, ObjString } from '@/interfaces'
 
 const initialState = {
    // List
    isLoading: false as boolean,
-   quizList: [] as [] | object[],
+   quizList: [] as [] | Array<IQuizName>,
    error: null as null | object,
    // Quiz
-   quiz: [] as [] | object[],
+   name: null as null | string,
+   quiz: [] as [] | Array<IQuizItem>,
    current: 0 as number,
-   answerStatus: null as null | object,
+   answerStatus: null as null | ObjString,
    completed: false as boolean,
-   results: [] as [] | object[]
+   results: [] as [] | Array<string>
 }
 
-export type QuestionType = {
-   question: string
-   answers: Array<AnswerType>
-   current: number
-}
-
-type AnswerType = {
-   id: number
-   text: string
-}
-
-type StateType = typeof initialState
+export type StateType = typeof initialState
 
 export default function quizReducer(state = initialState, action: ActionsTypes): StateType {
    switch (action.type) {
@@ -52,6 +43,11 @@ export default function quizReducer(state = initialState, action: ActionsTypes):
             quizList: [],
             isLoading: false,
             error: action.error
+         }
+      case Actions.SET_QUIZ_NAME:
+         return {
+            ...state,
+            name: action.name
          }
       case Actions.UPDATE_RESULTS:
          return {

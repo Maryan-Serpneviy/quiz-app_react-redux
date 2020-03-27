@@ -4,6 +4,7 @@ import Types from './actionTypes'
 import { Dispatch } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 import { StateType } from '../reducers/quiz'
+import { IQuizName, IQuizItem, ObjString } from '@/interfaces'
 import { shuffle } from '@/helpers/shuffle'
 import { QUESTION_DELAY } from '@/constants'
 
@@ -16,15 +17,15 @@ const fetchStart = (): FetchStartType => ({
 })
 
 type FetchQuizListSuccessType = {
-   type: typeof Types.FETCH_QUIZ_LIST_SUCCESS, quizList: object[] }
-const fetchQuizListSuccess = (quizList: object[]): FetchQuizListSuccessType => ({
+   type: typeof Types.FETCH_QUIZ_LIST_SUCCESS, quizList: Array<IQuizName> }
+const fetchQuizListSuccess = (quizList: Array<IQuizName>): FetchQuizListSuccessType => ({
    type: Types.FETCH_QUIZ_LIST_SUCCESS,
    quizList
 })
 
 type FetchQuizSuccessType = {
-   type: typeof Types.FETCH_QUIZ_SUCCESS, quiz: [] | object[] }
-const fetchQuizSuccess = (quiz: [] | object[]): FetchQuizSuccessType => ({
+   type: typeof Types.FETCH_QUIZ_SUCCESS, quiz: [] | Array<IQuizItem> }
+const fetchQuizSuccess = (quiz: [] | Array<IQuizItem>): FetchQuizSuccessType => ({
    type: Types.FETCH_QUIZ_SUCCESS,
    quiz
 })
@@ -43,11 +44,11 @@ export const fetchQuizes = (): ThunkTypeObj => {
          const response = await Axios.get('quiz.json')
    
          if (response.status === 200) {
-            const quizList = Object.entries(response.data).map(entry => {
-               const [id, data] = entry
+            const quizList: Array<IQuizName> = Object.entries(response.data).map(entry => {
+               const [id, { name }] = entry
                return {
                   id,
-                  name: data.name
+                  name
                }
             })
       
@@ -78,9 +79,15 @@ export const fetchQuiz = (id: string): ThunkTypeObj => {
    }
 }
 
+type SetQuizNameType = { type: typeof Types.SET_QUIZ_NAME, name: string }
+export const setQuizName = (name: string): SetQuizNameType => ({
+   type: Types.SET_QUIZ_NAME,
+   name
+})
+
 export const onAnswerClick = (id: number): ThunkTypeVoid => {
    return async (dispatch: Dispatch<ActionsTypes>, getState): Promise<void> => {
-      const state = getState().quiz
+      const state: StateType = getState().quiz
    
       const timeout = window.setTimeout(() => {
          if (state.current + 1 === state.quiz.length) { // if quiz completed
@@ -99,7 +106,7 @@ export const onAnswerClick = (id: number): ThunkTypeVoid => {
       }, QUESTION_DELAY)
    
       // updating results
-      const question = state.quiz[state.current]
+      const question: IQuizItem = state.quiz[state.current]
       if (question.correct === id) {
          dispatch(updateResults(
             { [id]: 'correct' },
@@ -116,9 +123,9 @@ export const onAnswerClick = (id: number): ThunkTypeVoid => {
 
 type UpdateResultsType = {
    type: typeof Types.UPDATE_RESULTS,
-   answerStatus: null | object,
-   results: object[] }
-const updateResults = (answerStatus: object | null, results: object[]): UpdateResultsType => ({
+   answerStatus: null | ObjString,
+   results: Array<string> }
+const updateResults = (answerStatus: null | ObjString, results: Array<string>): UpdateResultsType => ({
    type: Types.UPDATE_RESULTS,
    answerStatus,
    results
@@ -143,5 +150,5 @@ export const restartQuiz = (): RestartQuizType => ({
 })
 
 export type ActionsTypes = FetchStartType | FetchQuizListSuccessType | FetchQuizSuccessType |
-                          FetchErrorType | ShowResultsType | UpdateResultsType | RestartQuizType |
-                          GotoNextQuestionType
+                          FetchErrorType | SetQuizNameType | ShowResultsType | UpdateResultsType |
+                          RestartQuizType | GotoNextQuestionType
