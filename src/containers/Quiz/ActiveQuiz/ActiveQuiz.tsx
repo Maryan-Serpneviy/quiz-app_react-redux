@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import PropTypes, { InferProps } from 'prop-types'
 import AnswerOption from './AnswerOption'
+import Clock from '@com/Clock'
 import classes from './ActiveQuiz.module.scss'
 import { shuffle } from '@/helpers/shuffle'
 const clone = require('rfdc')()
@@ -35,11 +36,14 @@ const ActiveQuiz: React.FC<Props> = (
 
    return (
       <div className={classes.ActiveQuiz}>
-         <p className={classes.question}>
+         <div className={classes.question}>
             <span>{question}</span>
 
-            <small>{current} / {total}</small>
-         </p>
+            <small className={classes.clock}>
+               <Clock className={classes.clock} />
+            </small>
+            <small className={classes.total}>{current} / {total}</small>
+         </div>
 
          <ul className={classes.options}>
             {getAnswers().map((answer: { id: number, text: string }, index) => (

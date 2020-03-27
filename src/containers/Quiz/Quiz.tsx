@@ -34,9 +34,7 @@ const Quiz: React.FC<Props> = (
    useEffect(() => {
       fetchQuiz(props.match.params.id)
 
-      return () => {
-         restartQuiz()
-      }
+      return () => restartQuiz()
    }, [])
    
    return (
@@ -70,7 +68,7 @@ Quiz.propTypes = {
    isLoading: PropTypes.bool.isRequired,
    quiz: PropTypes.array.isRequired,
    current: PropTypes.number.isRequired,
-   answerStatus: PropTypes.object,
+   answerStatus: PropTypes.oneOf([null, PropTypes.object]),
    completed: PropTypes.bool.isRequired,
    results: PropTypes.array.isRequired,
    fetchQuiz: PropTypes.func.isRequired,
