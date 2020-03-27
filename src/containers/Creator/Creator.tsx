@@ -1,29 +1,30 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
-import * as Action from '@s/actions/creator'
 import { FormGroup, FormControl, Control, Validators } from '@lib/mforms'
+import * as Action from '@s/actions/creator'
 import Input from '@com/Input'
 import Select from '@com/Select'
 import Button from '@com/Button'
 import { MAX_OPTIONS } from '@/constants'
+import { IQuizItem } from '@/interfaces'
 import classes from './Creator.module.scss'
 
 type Props = {
    quiz: {
       name: string
-      items: object[]
+      items: Array<IQuizItem>
    }
-   updateQuiz: (item: object, name: string) => void
+   updateQuiz: (item: IQuizItem, name: string) => void
    uploadQuiz: () => Promise<object>
 }
 
 type State = {
    form: { [key: string]: Control }
-   isFormValid: boolean
    correct: number
+   isFormValid: boolean
 }
 
 @withRouter
@@ -133,7 +134,7 @@ class Creator extends Component<Props, State> {
       )
    }
 
-   renderInputs() {
+   renderInputs(): JSX.Element[] {
       const { controls } = this.state.form
       
       return Object.keys(controls).map((controlName: string, index) => {
@@ -167,14 +168,14 @@ class Creator extends Component<Props, State> {
       })
    }
 
-   addOption = () => {
+   addOption = (): void => {
       const newOption = this.createOption(this.optionsCount + 1)
       this.state.form.controls[`option${this.optionsCount + 1}`] = newOption
 
       this.setState({ ...this.state })
    }
 
-   removeOption = (label: string) => {
+   removeOption = (label: string): void => {
       const { controls } = this.state.form
       
       for (const control in controls) {
@@ -237,19 +238,19 @@ class Creator extends Component<Props, State> {
          }
       })
       
-      const answers = options.map(option => ({
+      const answers = options.map((option: { id: number, value: string }) => ({
          id: option.id,
          text: option.value
       }))
 
-      const questionItem = {
+      const quizItem: IQuizItem = {
          question: question.value,
          id: this.props.quiz.items.length + 1,
          correct: this.state.correct,
          answers
       }
 
-      this.props.updateQuiz(questionItem, name.value)
+      this.props.updateQuiz(quizItem, name.value)
       this.resetState()
    }
 
