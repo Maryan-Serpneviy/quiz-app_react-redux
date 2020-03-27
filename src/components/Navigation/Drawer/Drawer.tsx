@@ -41,7 +41,7 @@ const Drawer: React.FC<Props> = (
 
    const style = [classes.drawer]
    if (!isOpen) {
-      style.push(classes.close)
+      style.push(classes.open)
    }
 
    return (

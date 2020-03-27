@@ -14,7 +14,7 @@ const MenuToggle: React.FC<Props> = ({ toggleMenu, isOpen }: InferProps<typeof M
    ]
 
    isOpen ?
-      style = [...style, 'fa-times', classes.open] :
+      style = [...style, 'fa-times', classes.close] :
       style.push('fa-bars')
 
    return (

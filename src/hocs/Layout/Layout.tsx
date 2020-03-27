@@ -11,9 +11,8 @@ type Props = {
    children: JSX.Element[] | JSX.Element
 }
 
-const Layout: React.FC<Props> = ({
-   isAuthorized, children
-}: InferProps<typeof Layout.propTypes>) => {
+const Layout: React.FC<Props> = (
+   { isAuthorized, children } : InferProps<typeof Layout.propTypes>) => {
 
    const [menuOpen, setMenuOpen] = useState(false)
 
@@ -45,7 +44,7 @@ Layout.propTypes = {
 }
 
 const mapStateToProps = (state: { auth: Props }) => ({
-   isAuthorized: !!state.auth.token
+   isAuthorized: Boolean(state.auth.token)
 })
 
 export default connect(mapStateToProps)(Layout)

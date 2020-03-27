@@ -6,7 +6,7 @@
    left: 0;
    top: 0;
    bottom: 0;
-   width: 80%;
+   width: 50%;
    max-width: $menu-w;
    padding: 20px 10px;
    box-sizing: border-box;
@@ -14,8 +14,9 @@
    transform: translateX(0px);
    transition: transform .22s ease-in;
 
-   &.close {
+   &.open {
       transform: translateX(-$menu-w);
+      font-size: 25px;
    }
 
    ul {
@@ -39,6 +40,16 @@
                opacity: .7;
             }
          }
+      }
+   }
+}
+
+@media screen and (max-width: 780px) {
+   .drawer {
+      width: 55%;
+
+      ul li a {
+         font-size: 22px;
       }
    }
 }

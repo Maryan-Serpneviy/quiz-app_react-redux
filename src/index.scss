@@ -29,5 +29,11 @@ h1 {
 body {
    padding: 0;
    margin: 0;
-   min-width: 600px;
+   min-width: 300px;
+}
+
+@media screen and (max-width: $tablet-w) {
+   h1 {
+      font-size: 35px;
+   }
 }

@@ -5,7 +5,7 @@
    z-index: 2;
    top: 40px;
    left: 40px;
-   font-size: 20px;
+   font-size: 25px;
    cursor: pointer;
    color: $text-color;
    transition: opacity, left .2s ease-in;
@@ -14,7 +14,15 @@
       opacity: .7;
    }
 
-   &.open {
-      left: 320px;
+   &.close {
+      left: 325px;
+      top: 25px;
+   }
+}
+
+@media screen and (max-width: $tablet-w) {
+   .MenuToggle.close {
+      top: 20px;
+      left: 220px;
    }
 }

@@ -4,6 +4,7 @@
    display: flex;
    justify-content: center;
    padding-top: 50px;
+   padding-bottom: 20px;
    flex-grow: 1;
    width: 100%;
    background: linear-gradient(
@@ -45,5 +46,11 @@
       font-weight: bold;
       word-spacing: 0px;
       padding: 5px 0 0 4px;
+   }
+}
+
+@media screen and (max-width: $tablet-w) {
+   .quizCreator button {
+      margin-bottom: 8px;
    }
 }

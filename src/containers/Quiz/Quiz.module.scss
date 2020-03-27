@@ -17,9 +17,11 @@
       color: $text-color;
       text-shadow: $text-shadow;
       margin-left: 10px;
+      margin-top: -25px;
    }
 }
 
 .wrapper {
    width: $content-w;
+   margin-bottom: 20px;
 }
