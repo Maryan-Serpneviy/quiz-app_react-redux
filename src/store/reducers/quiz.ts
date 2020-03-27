@@ -8,7 +8,7 @@ const initialState = {
    quizList: [] as [] | Array<IQuizName>,
    error: null as null | object,
    // Quiz
-   name: null as null | string,
+   quizName: null as null | string,
    quiz: [] as [] | Array<IQuizItem>,
    current: 0 as number,
    answerStatus: null as null | ObjString,
@@ -47,7 +47,7 @@ export default function quizReducer(state = initialState, action: ActionsTypes):
       case Actions.SET_QUIZ_NAME:
          return {
             ...state,
-            name: action.name
+            quizName: action.quizName
          }
       case Actions.UPDATE_RESULTS:
          return {

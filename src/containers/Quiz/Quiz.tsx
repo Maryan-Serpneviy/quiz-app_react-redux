@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import PropTypes, { InferProps } from 'prop-types'
 import { connect } from 'react-redux'
 import * as Action from '@s/actions/quiz'
-import { QuestionType } from '@s/reducers/quiz'
+import { IQuizItem } from '@/interfaces'
 import LoaderSm from '@com/LoaderSm'
 import ActiveQuiz from './ActiveQuiz'
 import CompletedQuiz from './CompletedQuiz'
@@ -10,37 +10,32 @@ import classes from './Quiz.module.scss'
 
 type Props = {
    isLoading: boolean
-   quiz: Array<QuestionType>
+   quizName: string
+   quiz: Array<IQuizItem>
    current: number
    answerStatus: null | { [key: string]: string }
    completed: boolean
-   results: string[]
+   results: [] | Array<string>
+   match: { params: { id: string } }
    fetchQuiz: (id: string) => void
    onAnswerClick: (id: number) => void
    restartQuiz: () => void
 }
 
 const Quiz: React.FC<Props> = (
-   {
-      isLoading,
-      quiz,
-      current,
-      completed,
-      fetchQuiz,
-      restartQuiz,
-      ...props
-   }: InferProps<typeof Quiz.propTypes>) => {
+   { isLoading, quiz, quizName, fetchQuiz, restartQuiz, onAnswerClick,
+     answerStatus, current, completed, results, match }
+   : InferProps<typeof Quiz.propTypes>) => {
    
    useEffect(() => {
-      fetchQuiz(props.match.params.id)
-
+      fetchQuiz(match.params.id)
       return () => restartQuiz()
    }, [])
    
    return (
       <div className={classes.Quiz}>
          <div className={classes.wrapper}>
-            <h1>Quiz</h1>
+            <h1>{quizName}</h1>
 
             {isLoading && <LoaderSm />}
 
@@ -49,14 +44,14 @@ const Quiz: React.FC<Props> = (
                total={quiz.length}
                question={quiz[current].question}
                answers={quiz[current].answers}
-               onAnswerClick={props.onAnswerClick}
-               status={props.answerStatus}
+               onAnswerClick={onAnswerClick}
+               status={answerStatus}
             />}
 
             {!isLoading && completed && (
                <CompletedQuiz
                   quiz={quiz}
-                  results={props.results}
+                  results={results}
                   restartQuiz={restartQuiz}
             />)}
          </div>
@@ -66,9 +61,10 @@ const Quiz: React.FC<Props> = (
 
 Quiz.propTypes = {
    isLoading: PropTypes.bool.isRequired,
+   quizName: PropTypes.string,
    quiz: PropTypes.array.isRequired,
    current: PropTypes.number.isRequired,
-   answerStatus: PropTypes.oneOf([null, PropTypes.object]),
+   answerStatus: PropTypes.object,
    completed: PropTypes.bool.isRequired,
    results: PropTypes.array.isRequired,
    fetchQuiz: PropTypes.func.isRequired,
@@ -78,6 +74,7 @@ Quiz.propTypes = {
 
 const mapStateToProps = (state: { quiz: Props }) => ({
    isLoading: state.quiz.isLoading,
+   quizName: state.quiz.quizName,
    quiz: state.quiz.quiz,
    current: state.quiz.current,
    answerStatus: state.quiz.answerStatus,

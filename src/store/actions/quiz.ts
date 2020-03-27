@@ -79,10 +79,10 @@ export const fetchQuiz = (id: string): ThunkTypeObj => {
    }
 }
 
-type SetQuizNameType = { type: typeof Types.SET_QUIZ_NAME, name: string }
-export const setQuizName = (name: string): SetQuizNameType => ({
+type SetQuizNameType = { type: typeof Types.SET_QUIZ_NAME, quizName: string }
+export const setQuizName = (quizName: string): SetQuizNameType => ({
    type: Types.SET_QUIZ_NAME,
-   name
+   quizName
 })
 
 export const onAnswerClick = (id: number): ThunkTypeVoid => {
