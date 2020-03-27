@@ -16,8 +16,8 @@ type Props = {
 
 const List: React.FC<Props> = (
    // eslint-disable-next-line no-shadow
-   { isLoading, quizList, fetchQuizes, setQuizName } :
-   InferProps<typeof List.propTypes>) => {
+   { isLoading, quizList, fetchQuizes, setQuizName }
+   : InferProps<typeof List.propTypes>) => {
 
    useEffect(() => {
       fetchQuizes()

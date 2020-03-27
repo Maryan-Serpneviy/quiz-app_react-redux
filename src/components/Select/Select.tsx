@@ -10,8 +10,8 @@ type Props = {
 }
 
 const Select: React.FC<Props> = (
-   { label, value, options, onChange } :
-   InferProps<typeof Select.propTypes>) => {
+   { label, value, options, onChange }
+   : InferProps<typeof Select.propTypes>) => {
 
    const htmlFor = `${label}-${Math.round(Math.random() * 1000)}`
 

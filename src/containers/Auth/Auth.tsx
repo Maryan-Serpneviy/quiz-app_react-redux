@@ -171,7 +171,7 @@ class Auth extends Component<Props, State> {
    }
 }
 
-const mmapDispatchToProps = (dispatch: any): object => ({
+const mmapDispatchToProps = (dispatch: any) => ({
    authUser: (authData: AuthDataType) => dispatch(authUser(authData))
 })
 

@@ -28,8 +28,7 @@ type Props = {
 const Input: React.FC<Props> = (
    { label, type, value, error, touched, valid, errors,
      shouldValidate, autoblur, autofocus, onChange,
-     ...props } :
-   InferProps<typeof Input.propTypes>) => {
+     ...props } : InferProps<typeof Input.propTypes>) => {
 
    const inputRef = useRef(null)
 

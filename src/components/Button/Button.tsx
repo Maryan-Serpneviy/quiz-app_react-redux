@@ -13,8 +13,8 @@ type Props = {
 }
 
 const Button: React.FC<Props> = (
-   { style, disabled, onClick, children, ...props } :
-   InferProps<typeof Button.propTypes>) => {
+   { style, disabled, onClick, children, ...props }
+   : InferProps<typeof Button.propTypes>) => {
 
    const styles = [
       classes.button,
