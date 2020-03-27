@@ -13,9 +13,9 @@ const initialState = {
    current: 0 as number,
    answerStatus: null as null | ObjString,
    completed: false as boolean,
-   results: [] as [] | Array<string>
+   results: [] as [] | Array<string>,
+   time: 0 as number
 }
-
 export type StateType = typeof initialState
 
 export default function quizReducer(state = initialState, action: ActionsTypes): StateType {
@@ -60,6 +60,11 @@ export default function quizReducer(state = initialState, action: ActionsTypes):
             ...state,
             answerStatus: null,
             current: action.current
+         }
+      case Actions.SET_QUIZ_TIME:
+         return {
+            ...state,
+            time: action.time
          }
       case Actions.SHOW_RESULTS:
          return {

@@ -18,8 +18,8 @@ type Props = {
 type Answers = Array<{ id: number, text: string }>
 
 const ActiveQuiz: React.FC<Props> = (
-   { current, total, question, answers, status, onAnswerClick } :
-   InferProps<typeof ActiveQuiz.propTypes>) => {
+   { current, total, question, answers, status, onAnswerClick }
+   : InferProps<typeof ActiveQuiz.propTypes>) => {
 
    const cached = useRef(null) // persist once shuffled answers between renders
 

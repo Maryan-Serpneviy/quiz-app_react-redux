@@ -16,22 +16,19 @@ const fetchStart = (): FetchStartType => ({
    type: Types.FETCH_START
 })
 
-type FetchQuizListSuccessType = {
-   type: typeof Types.FETCH_QUIZ_LIST_SUCCESS, quizList: Array<IQuizName> }
+type FetchQuizListSuccessType = { type: typeof Types.FETCH_QUIZ_LIST_SUCCESS, quizList: Array<IQuizName> }
 const fetchQuizListSuccess = (quizList: Array<IQuizName>): FetchQuizListSuccessType => ({
    type: Types.FETCH_QUIZ_LIST_SUCCESS,
    quizList
 })
 
-type FetchQuizSuccessType = {
-   type: typeof Types.FETCH_QUIZ_SUCCESS, quiz: [] | Array<IQuizItem> }
+type FetchQuizSuccessType = { type: typeof Types.FETCH_QUIZ_SUCCESS, quiz: [] | Array<IQuizItem> }
 const fetchQuizSuccess = (quiz: [] | Array<IQuizItem>): FetchQuizSuccessType => ({
    type: Types.FETCH_QUIZ_SUCCESS,
    quiz
 })
 
-type FetchErrorType = {
-   type: typeof Types.FETCH_ERROR, error: object }
+type FetchErrorType = { type: typeof Types.FETCH_ERROR, error: object }
 const fetchError = (err: object): FetchErrorType => ({
    type: Types.FETCH_ERROR,
    error: err
@@ -79,12 +76,6 @@ export const fetchQuiz = (id: string): ThunkTypeObj => {
    }
 }
 
-type SetQuizNameType = { type: typeof Types.SET_QUIZ_NAME, quizName: string }
-export const setQuizName = (quizName: string): SetQuizNameType => ({
-   type: Types.SET_QUIZ_NAME,
-   quizName
-})
-
 export const onAnswerClick = (id: number): ThunkTypeVoid => {
    return async (dispatch: Dispatch<ActionsTypes>, getState): Promise<void> => {
       const state: StateType = getState().quiz
@@ -121,22 +112,33 @@ export const onAnswerClick = (id: number): ThunkTypeVoid => {
    }
 }
 
+type SetQuizNameType = { type: typeof Types.SET_QUIZ_NAME, quizName: string }
+export const setQuizName = (quizName: string): SetQuizNameType => ({
+   type: Types.SET_QUIZ_NAME,
+   quizName
+})
+
 type UpdateResultsType = {
    type: typeof Types.UPDATE_RESULTS,
    answerStatus: null | ObjString,
-   results: Array<string> }
+   results: Array<string>
+}
 const updateResults = (answerStatus: null | ObjString, results: Array<string>): UpdateResultsType => ({
    type: Types.UPDATE_RESULTS,
    answerStatus,
    results
 })
 
-type GotoNextQuestionType = {
-   type: typeof Types.GOTO_NEXT_QUESTION,
-   current: number }
+type GotoNextQuestionType = { type: typeof Types.GOTO_NEXT_QUESTION, current: number }
 const gotoNextQuestion = (current: number): GotoNextQuestionType => ({
    type: Types.GOTO_NEXT_QUESTION,
    current
+})
+
+type setQuizTimeType = { type: typeof Types.SET_QUIZ_TIME, time: number }
+export const setQuizTime = (time: number): setQuizTimeType => ({
+   type: Types.SET_QUIZ_TIME,
+   time
 })
 
 type ShowResultsType = { type: typeof Types.SHOW_RESULTS }
@@ -149,6 +151,7 @@ export const restartQuiz = (): RestartQuizType => ({
    type: Types.RESTART_QUIZ
 })
 
-export type ActionsTypes = FetchStartType | FetchQuizListSuccessType | FetchQuizSuccessType |
-                          FetchErrorType | SetQuizNameType | ShowResultsType | UpdateResultsType |
-                          RestartQuizType | GotoNextQuestionType
+export type ActionsTypes =
+   FetchStartType | FetchQuizListSuccessType | FetchQuizSuccessType |
+   FetchErrorType | SetQuizNameType | ShowResultsType | UpdateResultsType |
+   setQuizTimeType | RestartQuizType | GotoNextQuestionType

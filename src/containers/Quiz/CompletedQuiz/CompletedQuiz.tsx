@@ -1,19 +1,23 @@
 import React from 'react'
-import PropTypes, { InferProps } from 'prop-types'
 import { useHistory } from 'react-router-dom'
+import { connect } from 'react-redux'
+import PropTypes, { InferProps } from 'prop-types'
+
+import { timeTransform } from '@/helpers/timeTransform'
 import Button from '@com/Button'
 import classes from './CompletedQuiz.module.scss'
 
 type Props = {
    quiz: object[]
-   results: string[]
+   results: Array<string>
+   time: number
    restartQuiz: () => void
 }
 
 const CompletedQuiz: React.FC<Props> = (
-   { quiz, results, restartQuiz } :
-   InferProps<typeof CompletedQuiz.propTypes>) => {
-   
+   { quiz, results, time, restartQuiz }
+   : InferProps<typeof CompletedQuiz.propTypes>) => {
+
    const history = useHistory()
 
    const getSuccessRate = () => {
@@ -22,21 +26,35 @@ const CompletedQuiz: React.FC<Props> = (
 
    return (
       <div className={classes.CompletedQuiz}>
+         <ul className={classes.results}>
+            <li className={classes.result}>
+               Score: <b>{getSuccessRate()}%</b>
+            </li>
+            <li className={classes.result}>
+               Time: <b>{timeTransform(time)}</b>
+            </li>
+            <li className={classes.result}>
+               Answer AVG: <b>{timeTransform(Math.round(time / results.length))}</b>
+            </li>
+         </ul>
+
          <ul>
             {quiz.map((item: { question: string }, index) => (
-               <li key={index}>
-                  <strong>{index + 1}. </strong>
-                  {item.question}
-                  <i className={
-                     `fa ${results[index] === 'correct' ?
-                        `fa-check ${classes.correct}` :
-                        `fa-times ${classes.incorrect}`}`
-                  } />
-               </li>
+               <React.Fragment key={index}>
+                  <li>
+                     <strong>{index + 1}. </strong>
+                     {item.question}
+                     <i className={
+                        `fa ${results[index] === 'correct' ?
+                           `fa-check ${classes.correct}` :
+                           `fa-times ${classes.incorrect}`}`
+                     } />
+                  </li>
+                  <hr/>
+               </React.Fragment>
             ))}
          </ul>
 
-         <p className={classes.result}>You scored <b>{getSuccessRate()}%</b></p>
          <Button onClick={restartQuiz} type="success">
             Try again
          </Button>
@@ -54,4 +72,8 @@ CompletedQuiz.propTypes = {
    restartQuiz: PropTypes.func
 }
 
-export default CompletedQuiz
+const mapStateToProps = (state: { quiz: { time: number } }) => ({
+   time: state.quiz.time
+})
+
+export default connect(mapStateToProps, null)(CompletedQuiz)

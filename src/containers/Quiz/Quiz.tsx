@@ -35,7 +35,7 @@ const Quiz: React.FC<Props> = (
    return (
       <div className={classes.Quiz}>
          <div className={classes.wrapper}>
-            <h1>{quizName}</h1>
+            <h1>{quizName || 'Quiz'}</h1>
 
             {isLoading && <LoaderSm />}
 
