@@ -1,5 +1,4 @@
 import React from 'react'
-import Drawer from '../Navigation/Drawer'
 import classes from './Footer.module.scss'
 
 export default function Footer() {
