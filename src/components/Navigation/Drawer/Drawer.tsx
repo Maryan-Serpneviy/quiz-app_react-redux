@@ -1,7 +1,9 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import PropTypes, { InferProps } from 'prop-types'
+
 import BackDrop from '@com/Navigation/BackDrop'
+import { ILink } from '@/interfaces'
 import classes from './Drawer.module.scss'
 
 type Props = {
@@ -13,7 +15,7 @@ type Props = {
 const Drawer: React.FC<Props> = (
    { isAuthorized, isOpen, hideMenu } : InferProps<typeof Drawer.propTypes>) => {
 
-   const links = [
+   const links: Array<ILink> = [
       { to: '/', label: 'Quiz List', exact: true }
    ]
 
@@ -39,14 +41,14 @@ const Drawer: React.FC<Props> = (
       ))
    }
 
-   const style = [classes.drawer]
+   const styles: Array<string> = [classes.drawer]
    if (!isOpen) {
-      style.push(classes.open)
+      styles.push(classes.open)
    }
 
    return (
       <>
-         <nav className={style.join(' ')}>
+         <nav className={styles.join(' ')}>
             <ul>
                {renderLinks()}
             </ul>

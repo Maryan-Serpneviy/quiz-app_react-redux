@@ -16,10 +16,9 @@ type Props = {
     token?: string
 }
 
-const App: React.FC<Props> = ({
+const App: React.FC<Props> = (
     // eslint-disable-next-line no-shadow
-    isAuthorized, autoLogin
-}: InferProps<typeof App.propTypes>) => {
+    { isAuthorized, autoLogin } : InferProps<typeof App.propTypes>) => {
 
     useEffect(() => {
         autoLogin()

@@ -3,6 +3,7 @@ import PropTypes, { InferProps } from 'prop-types'
 import { connect } from 'react-redux'
 import MenuToggle from '@com/Navigation/MenuToggle'
 import Drawer from '@com/Navigation/Drawer'
+import Footer from '@com/Footer'
 import classes from './Layout.module.scss'
 
 type Props = {
@@ -11,8 +12,7 @@ type Props = {
    children: JSX.Element[] | JSX.Element
 }
 
-const Layout: React.FC<Props> = (
-   { isAuthorized, children } : InferProps<typeof Layout.propTypes>) => {
+const Layout: React.FC<Props> = ({ isAuthorized, children } : InferProps<typeof Layout.propTypes>) => {
 
    const [menuOpen, setMenuOpen] = useState(false)
 
@@ -35,6 +35,8 @@ const Layout: React.FC<Props> = (
          <main>
             {children}
          </main>
+
+         <Footer />
       </div>
    )
 }

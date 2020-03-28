@@ -18,3 +18,9 @@ export interface IAnswer {
    id: number
    text: string
 }
+
+export interface ILink {
+   to: string
+   label: string
+   exact: boolean
+}
